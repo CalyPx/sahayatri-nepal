@@ -38,3 +38,5 @@ next-env.d.ts
 # local artifacts
 /screenshots
 remaining_prompt*.md
+
+.scripts
