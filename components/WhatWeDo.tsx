@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 const BLUE = "#1A6FA8";
@@ -11,147 +11,189 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 const PILLARS = [
   {
+    tag: "PROGRAMME 01",
     title: "Education",
-    desc: "Sign language curriculum for deaf students",
+    desc: "Sign language curriculum, qualified teachers, and structured learning for deaf students across Karnali Province.",
   },
   {
-    title: "Shelter",
-    desc: "Safe housing in Jumla for rural students",
+    tag: "PROGRAMME 02",
+    title: "Safe Housing",
+    desc: "Residential accommodation in Jumla for students travelling from remote villages — some walking days to reach us.",
   },
   {
+    tag: "PROGRAMME 03",
     title: "Life Skills",
-    desc: "Art, sport and child safeguarding programs",
+    desc: "Art, sport, child safeguarding, and extracurricular programmes — because childhood matters beyond the classroom.",
   },
 ];
 
 export default function WhatWeDo() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const prefersReduced = useReducedMotion();
 
-  const enter = (delay: number) => ({
-    initial: { opacity: 0, y: 18 },
-    animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
-    transition: { duration: 0.38, delay, ease: EASE },
-  });
+  const enter = (delay: number) =>
+    prefersReduced
+      ? {}
+      : {
+          initial: { opacity: 0, y: 16 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
+          transition: { duration: 0.26, delay, ease: EASE },
+        };
 
   return (
     <section
       id="what-we-do"
       ref={ref}
-      style={{ background: "#F0F7FF", padding: "112px 0" }}
+      aria-labelledby="wwd-heading"
+      className="section-pad-wwd"
+      style={{ background: "#F0F7FF", padding: "48px 80px 60px 80px" }}
     >
       <div
+        className="wwd-grid"
         style={{
-          maxWidth: "1200px",
+          maxWidth: "1280px",
           margin: "0 auto",
-          padding: "0 80px",
-          display: "flex",
-          alignItems: "center",
-          gap: "88px",
+          display: "grid",
+          gridTemplateColumns: "55% 45%",
+          alignItems: "flex-start",
         }}
       >
-        {/* Left — three circles stacked */}
+        {/* Left — 3 programme cards in a horizontal row */}
         <div
+          className="wwd-cards"
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "28px",
-            flexShrink: 0,
+            flexDirection: "row",
+            gap: "24px",
+            alignItems: "stretch",
+            paddingTop: "8px",
           }}
         >
           {PILLARS.map((pillar, i) => (
             <motion.div
               key={pillar.title}
-              {...enter(i * 0.1)}
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 320, damping: 24 }}
+              {...enter(i * 0.09)}
+              onMouseEnter={(e) => {
+                if (prefersReduced) return;
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(-4px)";
+                el.style.boxShadow =
+                  "0 8px 28px rgba(26,111,168,0.16), 0 16px 48px rgba(26,111,168,0.12)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(0)";
+                el.style.boxShadow =
+                  "0 2px 12px rgba(26,111,168,0.08), 0 8px 32px rgba(26,111,168,0.06)";
+              }}
               style={{
-                width: "200px",
-                height: "200px",
-                borderRadius: "50%",
-                border: `1.5px solid ${BLUE}`,
-                background: "transparent",
+                flex: 1,
+                background: "#FFFFFF",
+                borderRadius: "12px",
+                padding: "36px 32px",
+                minHeight: "220px",
+                boxShadow:
+                  "0 2px 12px rgba(26,111,168,0.08), 0 8px 32px rgba(26,111,168,0.06)",
+                borderTop: `3px solid ${BLUE}`,
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: "28px",
-                cursor: "default",
               }}
             >
               <span
                 style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 500,
+                  fontSize: "10px",
+                  color: BLUE,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  marginBottom: "12px",
+                  display: "block",
+                }}
+              >
+                {pillar.tag}
+              </span>
+              <div
+                style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "17px",
                   fontWeight: 700,
+                  fontSize: "22px",
                   color: DARK,
-                  letterSpacing: "-0.01em",
-                  marginBottom: "8px",
-                  lineHeight: 1.1,
+                  marginBottom: "10px",
+                  lineHeight: 1.2,
                 }}
               >
                 {pillar.title}
-              </span>
-              <span
+              </div>
+              <p
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: "12px",
                   fontWeight: 400,
-                  color: BODY_COLOR,
-                  lineHeight: 1.55,
+                  fontSize: "14px",
+                  color: "#5A6A7A",
+                  lineHeight: 1.75,
+                  margin: 0,
                 }}
               >
                 {pillar.desc}
-              </span>
+              </p>
             </motion.div>
           ))}
         </div>
 
         {/* Right — editorial text */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Eyebrow */}
+        <div
+          className="wwd-right"
+          style={{
+            paddingLeft: "64px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
           <motion.p
-            {...enter(0.08)}
+            {...enter(0.06)}
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: "9px",
-              fontWeight: 600,
+              fontSize: "12px",
+              fontWeight: 500,
               color: BLUE,
-              letterSpacing: "0.18em",
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
-              margin: "0 0 18px 0",
+              margin: "0 0 16px 0",
             }}
           >
             WHAT WE DO
           </motion.p>
 
-          {/* H2 */}
           <motion.h2
-            {...enter(0.16)}
+            id="wwd-heading"
+            {...enter(0.12)}
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(28px, 3vw, 36px)",
+              fontSize: "clamp(28px, 3vw, 42px)",
               fontWeight: 700,
               color: DARK,
-              lineHeight: 1.15,
+              lineHeight: 1.2,
               letterSpacing: "-0.02em",
-              margin: "0 0 28px 0",
+              margin: "0 0 24px 0",
             }}
           >
             A school where silence is never a barrier.
           </motion.h2>
 
-          {/* Body paragraphs */}
           <motion.p
-            {...enter(0.22)}
+            {...enter(0.18)}
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "15px",
               fontWeight: 400,
               color: BODY_COLOR,
-              lineHeight: 1.8,
-              margin: "0 0 18px 0",
+              lineHeight: 1.85,
+              margin: "0 0 16px 0",
+              maxWidth: "480px",
             }}
           >
             In Chandanath-02, Jumla — one of Nepal&rsquo;s most remote and
@@ -162,14 +204,15 @@ export default function WhatWeDo() {
           </motion.p>
 
           <motion.p
-            {...enter(0.28)}
+            {...enter(0.24)}
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "15px",
               fontWeight: 400,
               color: BODY_COLOR,
-              lineHeight: 1.8,
-              margin: "0 0 36px 0",
+              lineHeight: 1.85,
+              margin: "0 0 16px 0",
+              maxWidth: "480px",
             }}
           >
             Our approach is simple: give every child the language, safety, and
@@ -178,8 +221,7 @@ export default function WhatWeDo() {
             national exam passed.
           </motion.p>
 
-          {/* Link */}
-          <motion.div {...enter(0.34)}>
+          <motion.div {...enter(0.30)}>
             <Link
               href="/programs"
               onMouseEnter={(e) =>
@@ -190,12 +232,14 @@ export default function WhatWeDo() {
               }
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: "15px",
-                fontWeight: 600,
+                fontSize: "14px",
+                fontWeight: 500,
                 color: BLUE,
-                textDecoration: "underline",
-                textUnderlineOffset: "4px",
-                textDecorationThickness: "1px",
+                textDecoration: "none",
+                borderBottom: `1px solid ${BLUE}`,
+                paddingBottom: "2px",
+                display: "inline-block",
+                marginTop: "8px",
                 transition: "color 0.2s ease",
               }}
             >

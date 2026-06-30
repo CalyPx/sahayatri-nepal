@@ -2,41 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ─────────────────────────────────────── */
+:root {
+  --white:     #FFFFFF;
+  --off-white: #FAFAF8;
+  --navy:      #0D1B2A;
+  --gold:      #D4AF37;
+  --gray:      #6B7A8D;
+  --text:      #0D1B2A;
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* 8px spacing scale */
+  --s-8:  8px;
+  --s-16: 16px;
+  --s-24: 24px;
+  --s-32: 32px;
+  --s-40: 40px;
+  --s-48: 48px;
+  --s-64: 64px;
+  --s-80: 80px;
+  --s-96: 96px;
+  --s-120: 120px;
+  --s-160: 160px;
+
+  --max-w: 1200px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @layer base {
-  :root {
-    --background: #FFFFFF;
-    --foreground: #0A1628;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans), system-ui, sans-serif; }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #D4AF37 0%, #E8C86B 50%, #D4AF37 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+/* ── Focus ring ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-/* Ken Burns — subtle 20s zoom, hero image feels alive */
+/* ── Section wrapper utility ────────────────────────────── */
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--s-40);
+}
+
+/* ── Nav link underline slide-in hover ──────────────────── */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #D4AF37;
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after,
+.nav-link-active::after {
+  width: 100%;
+}
+
+/* ── Ken Burns ──────────────────────────────────────────── */
 @keyframes kenburns {
   from { transform: scale(1.0); }
-  to   { transform: scale(1.06); }
+  to   { transform: scale(1.04); }
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Responsive breakpoints ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .two-col { grid-template-columns: 1fr !important; }
+  .two-col-reverse { grid-template-columns: 1fr !important; }
+  .three-col { grid-template-columns: 1fr !important; }
+  .section-inner { padding: 0 var(--s-32); }
+}
+
+@media (max-width: 768px) {
+  .section-inner { padding: 0 var(--s-24); }
+  .impact-row { flex-direction: column !important; gap: var(--s-48) !important; }
+  .impact-divider { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .section-inner { padding: 0 var(--s-16); }
+  .hero-ctas { flex-direction: column !important; align-items: flex-start !important; }
+}
+
+/* ── Footer grid ─────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 48px !important;
+  }
+}
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
