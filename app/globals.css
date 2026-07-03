@@ -88,9 +88,10 @@
 
 /* ── Responsive breakpoints ─────────────────────────────── */
 @media (max-width: 1024px) {
-  .two-col { grid-template-columns: 1fr !important; }
+  .two-col,
   .two-col-reverse { grid-template-columns: 1fr !important; }
-  .three-col { grid-template-columns: 1fr !important; }
+  /* Programs: 2-col on tablets, not 1-col */
+  .three-col { grid-template-columns: 1fr 1fr !important; }
   .section-inner { padding: 0 var(--s-32); }
 }
 
@@ -98,11 +99,58 @@
   .section-inner { padding: 0 var(--s-24); }
   .impact-row { flex-direction: column !important; gap: var(--s-48) !important; }
   .impact-divider { display: none !important; }
+  /* Map section — stack text first, map below */
+  .map-grid { grid-template-columns: 1fr !important; }
+  .map-visual { order: 2; max-width: 400px; width: 100%; margin: 0 auto; }
+  .map-text { order: 1; }
+  /* Story image — zero out the negative offset so it doesn't pull into section above */
+  .story-image { margin-top: 0 !important; }
 }
 
 @media (max-width: 640px) {
   .section-inner { padding: 0 var(--s-16); }
   .hero-ctas { flex-direction: column !important; align-items: flex-start !important; }
+  /* Programs: single column on small mobile */
+  .three-col { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 480px) {
+  /* Tighten eyebrow letter-spacing so longer string stays on one line */
+  .hero-eyebrow { letter-spacing: 0.10em !important; font-size: 10px !important; }
+}
+
+/* ── Donate button ripple fill effect ───────────────────── */
+.donate-spotlight-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.donate-btn-text {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.donate-ripple {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s ease;
+}
+
+.donate-ripple-active {
+  transform: scale(var(--ripple-scale, 40));
+  opacity: 1;
 }
 
 /* ── Footer grid ─────────────────────────────────────────── */

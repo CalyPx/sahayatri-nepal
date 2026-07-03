@@ -35,13 +35,13 @@ export default function Reports() {
       <div className="section-inner">
 
         {/* Header */}
-        <motion.div {...enter(0)} style={{ marginBottom: "56px" }}>
+        <motion.div {...enter(0)} style={{ marginBottom: "48px" }}>
           <p
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
-              fontSize: "12px",
-              letterSpacing: "0.18em",
+              fontSize: "11px",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#D4AF37",
               marginBottom: "20px",
@@ -54,7 +54,7 @@ export default function Reports() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
-              fontSize: "clamp(34px,4.5vw,52px)",
+              fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
               color: "#0D1B2A",
@@ -64,152 +64,7 @@ export default function Reports() {
           </h2>
         </motion.div>
 
-        {/* Featured report — bordered card */}
-        <motion.div
-          {...enter(0.1)}
-          className="two-col"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            borderRadius: "24px",
-            overflow: "hidden",
-            border: "1px solid rgba(0,0,0,0.07)",
-            marginBottom: "48px",
-          }}
-        >
-          {/* Left — report cover */}
-          <div
-            style={{
-              background: "#0D1B2A",
-              padding: "56px 48px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              minHeight: "340px",
-            }}
-          >
-            {/* Cover top */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div
-                aria-hidden="true"
-                style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#D4AF37" }}
-              />
-              <span
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 500,
-                  fontSize: "11px",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.35)",
-                }}
-              >
-                Sahayatri Nepal
-              </span>
-            </div>
-
-            {/* Cover bottom */}
-            <div>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 500,
-                  fontSize: "11px",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "#D4AF37",
-                  marginBottom: "12px",
-                }}
-              >
-                Annual Report
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                  fontSize: "clamp(52px,7vw,78px)",
-                  lineHeight: 0.9,
-                  letterSpacing: "-0.04em",
-                  color: "rgba(255,255,255,0.88)",
-                }}
-              >
-                2024–25
-              </p>
-            </div>
-          </div>
-
-          {/* Right — report detail */}
-          <div
-            style={{
-              background: "#FFFFFF",
-              padding: "56px 48px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 700,
-                  fontSize: "clamp(22px,2.4vw,28px)",
-                  lineHeight: 1.25,
-                  letterSpacing: "-0.02em",
-                  color: "#0D1B2A",
-                  marginBottom: "20px",
-                }}
-              >
-                Annual Report 2024–25
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 400,
-                  fontSize: "17px",
-                  lineHeight: 1.75,
-                  color: "#6B7A8D",
-                  marginBottom: "40px",
-                  maxWidth: "44ch",
-                }}
-              >
-                Full programme report covering education outcomes, residential housing, child safeguarding, and financial transparency for the 2024–25 academic year.
-              </p>
-            </div>
-            <Link
-              href="/reports/annual-2024-25"
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#c49e2f";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#D4AF37";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              }}
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontWeight: 600,
-                fontSize: "13px",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                color: "#0D1B2A",
-                backgroundColor: "#D4AF37",
-                paddingInline: "28px",
-                height: "50px",
-                display: "inline-flex",
-                alignItems: "center",
-                borderRadius: "10px",
-                alignSelf: "flex-start",
-                transition: "background-color 0.2s ease, transform 0.2s ease",
-              }}
-            >
-              Download Report
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* Secondary reports list */}
+        {/* Reports list */}
         <div
           style={{
             borderTop: "1px solid rgba(0,0,0,0.07)",

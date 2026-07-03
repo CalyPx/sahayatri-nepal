@@ -133,15 +133,17 @@ export default function Footer() {
                   fontFamily: "var(--font-sans)",
                   fontWeight: 600,
                   fontSize: "11px",
-                  letterSpacing: "0.16em",
+                  letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.28)",
-                  marginBottom: "24px",
+                  color: "rgba(255,255,255,0.4)",
+                  paddingBottom: "10px",
+                  marginBottom: "0",
+                  borderBottom: "1px solid rgba(255,255,255,0.12)",
                 }}
               >
                 {title}
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "14px" }}>
                 {links.map((link) => (
                   <Link
                     key={link.label}
@@ -180,16 +182,52 @@ export default function Footer() {
             gap: "12px",
           }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 400,
-              fontSize: "13px",
-              color: "rgba(255,255,255,0.22)",
-            }}
-          >
-            © 2025 Sahayatri Nepal · Registered NGO, Jumla, Karnali Province, Nepal
-          </span>
+          {/* Left: Facebook icon + copyright */}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <a
+              href="https://www.facebook.com/profile.php?id=61588662294463"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sahayatri Nepal on Facebook"
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "#D4AF37")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)")
+              }
+              style={{
+                color: "rgba(255,255,255,0.5)",
+                transition: "color 0.2s ease",
+                display: "flex",
+                alignItems: "center",
+                flexShrink: 0,
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+            </a>
+            <span
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 400,
+                fontSize: "13px",
+                color: "rgba(255,255,255,0.22)",
+              }}
+            >
+              © 2025 Sahayatri Nepal · Registered NGO, Jumla, Karnali Province, Nepal
+            </span>
+          </div>
           <span
             style={{
               fontFamily: "var(--font-sans)",

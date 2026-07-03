@@ -32,10 +32,11 @@ export default function ImpactMap() {
       aria-labelledby="map-heading"
       style={{
         background: "#F0F7FF",
-        padding: "120px clamp(24px, 8vw, 120px)",
+        padding: "clamp(64px, 8vw, 120px) clamp(24px, 8vw, 120px)",
       }}
     >
       <div
+        className="map-grid"
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
@@ -48,21 +49,22 @@ export default function ImpactMap() {
         {/* ── LEFT: Real Nepal map from GeoJSON survey data ─────────────── */}
         <motion.div
           {...enter(0)}
+          className="map-visual"
           style={{ maxWidth: "600px", width: "100%" }}
         >
           <NepalMap />
         </motion.div>
 
         {/* ── RIGHT: Text content ─────────────────────────────────────────── */}
-        <div>
+        <div className="map-text">
           {/* Eyebrow */}
           <motion.p
             {...enter(0.08)}
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
-              fontSize: "10px",
-              letterSpacing: "0.18em",
+              fontSize: "11px",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#C8A84B",
               marginBottom: "20px",
@@ -78,7 +80,7 @@ export default function ImpactMap() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
-              fontSize: "clamp(26px, 3.4vw, 38px)",
+              fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
               color: "#0A1628",
@@ -96,7 +98,7 @@ export default function ImpactMap() {
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
               fontSize: "16px",
-              lineHeight: 1.8,
+              lineHeight: 1.7,
               color: "#5A6A7A",
               marginBottom: "48px",
               maxWidth: "44ch",

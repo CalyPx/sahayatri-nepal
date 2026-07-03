@@ -24,7 +24,7 @@ export default function Mission() {
     <section
       ref={ref}
       aria-labelledby="mission-heading"
-      style={{ background: "#FAFAF8", padding: "clamp(80px,9vw,128px) 0" }}
+      style={{ background: "#FAFAF8", padding: "clamp(80px,9vw,128px) 0 64px" }}
     >
       <div
         className="section-inner two-col"
@@ -43,7 +43,7 @@ export default function Mission() {
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
               fontSize: "11px",
-              letterSpacing: "0.18em",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#D4AF37",
               marginBottom: "28px",
@@ -58,7 +58,7 @@ export default function Mission() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
-              fontSize: "clamp(34px,4.2vw,50px)",
+              fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.08,
               letterSpacing: "-0.03em",
               color: "#0D1B2A",
@@ -74,8 +74,8 @@ export default function Mission() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "18px",
-              lineHeight: 1.8,
+              fontSize: "16px",
+              lineHeight: 1.7,
               color: "#4A5568",
               marginBottom: "20px",
               maxWidth: "54ch",
@@ -89,8 +89,8 @@ export default function Mission() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "18px",
-              lineHeight: 1.8,
+              fontSize: "16px",
+              lineHeight: 1.7,
               color: "#4A5568",
               marginBottom: "44px",
               maxWidth: "54ch",
@@ -161,57 +161,36 @@ export default function Mission() {
           </blockquote>
 
           {/* Author */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div
-              aria-hidden="true"
+          <div
+            style={{
+              borderLeft: "2px solid #D4AF37",
+              paddingLeft: "12px",
+            }}
+          >
+            <p
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                background: "rgba(212,175,55,0.12)",
-                border: "1.5px solid rgba(212,175,55,0.30)",
-                flexShrink: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                fontFamily: "var(--font-sans)",
+                fontWeight: 600,
+                fontSize: "13px",
+                color: "#0A1628",
+                letterSpacing: "0.01em",
+                margin: 0,
               }}
             >
-              <span
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 600,
-                  fontSize: "11px",
-                  color: "#B8962E",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                DT
-              </span>
-            </div>
-            <div>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 600,
-                  fontSize: "13px",
-                  color: "#0D1B2A",
-                  marginBottom: "2px",
-                }}
-              >
-                Devendra Timilsena
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 400,
-                  fontSize: "12px",
-                  color: "#9AA5B1",
-                  letterSpacing: "0.01em",
-                }}
-              >
-                Chief Advisor
-              </p>
-            </div>
+              DEVENDRA TIMILSENA
+            </p>
+            <p
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 400,
+                fontSize: "12px",
+                color: "#5A6A7A",
+                marginTop: "2px",
+                marginBottom: 0,
+              }}
+            >
+              Chief Advisor, Sahayatri Nepal
+            </p>
           </div>
         </motion.div>
       </div>

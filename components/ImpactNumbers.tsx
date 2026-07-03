@@ -64,8 +64,8 @@ export default function ImpactNumbers() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
-              fontSize: "12px",
-              letterSpacing: "0.18em",
+              fontSize: "11px",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#D4AF37",
               marginBottom: "20px",
@@ -78,7 +78,7 @@ export default function ImpactNumbers() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
-              fontSize: "clamp(32px,4vw,48px)",
+              fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.05,
               letterSpacing: "-0.03em",
               color: "#0D1B2A",
@@ -91,7 +91,7 @@ export default function ImpactNumbers() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "18px",
+              fontSize: "16px",
               lineHeight: 1.7,
               color: "#6B7A8D",
               maxWidth: "48ch",

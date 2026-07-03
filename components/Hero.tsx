@@ -6,6 +6,38 @@ import Link from "next/link";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const maxDist = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  );
+  const scaleNeeded = (maxDist * 2.2) / 8;
+  const existing = btn.querySelector(".donate-ripple");
+  if (existing) existing.remove();
+  const circle = document.createElement("span");
+  circle.className = "donate-ripple";
+  circle.style.left = `${x}px`;
+  circle.style.top = `${y}px`;
+  circle.style.setProperty("--ripple-scale", String(scaleNeeded));
+  btn.appendChild(circle);
+  requestAnimationFrame(() => circle.classList.add("donate-ripple-active"));
+  btn.style.transform = "translateY(-2px)";
+  btn.style.boxShadow = "0 6px 20px rgba(212,175,55,0.45)";
+};
+
+const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  btn.querySelector(".donate-ripple")?.classList.remove("donate-ripple-active");
+  btn.style.transform = "translateY(0)";
+  btn.style.boxShadow = "none";
+};
+
 export default function Hero() {
   const prefersReduced = useReducedMotion();
 
@@ -24,8 +56,7 @@ export default function Hero() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100svh",
-        minHeight: "900px",
+        minHeight: "100svh",
         overflow: "hidden",
       }}
     >
@@ -64,14 +95,15 @@ export default function Hero() {
       {/* Content */}
       <div
         style={{
-          position: "absolute",
-          inset: 0,
+          position: "relative",
+          zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
+          justifyContent: "flex-end",
           alignItems: "flex-start",
-          paddingTop: "210px",
-          paddingBottom: "100px",
+          minHeight: "100svh",
+          paddingTop: "100px",
+          paddingBottom: "clamp(48px, 8vh, 100px)",
           paddingLeft: "clamp(40px,6vw,100px)",
           paddingRight: "clamp(20px,3vw,40px)",
         }}
@@ -80,6 +112,7 @@ export default function Hero() {
           {/* Eyebrow */}
           <motion.p
             {...fade(0, 0)}
+            className="hero-eyebrow"
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
@@ -88,9 +121,10 @@ export default function Hero() {
               textTransform: "uppercase",
               color: "#D8A826",
               marginBottom: "24px",
+              whiteSpace: "nowrap",
             }}
           >
-            Karnali Province, Nepal
+            Deaf Education · Karnali Province, Nepal
           </motion.p>
 
           {/* Headline */}
@@ -142,14 +176,9 @@ export default function Hero() {
           >
             <Link
               href="/donate"
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#c49b20";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#D8A826";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              }}
+              className="donate-spotlight-btn donate-spotlight-md"
+              onMouseEnter={handleDonateEnter}
+              onMouseLeave={handleDonateLeave}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 600,
@@ -164,11 +193,11 @@ export default function Hero() {
                 display: "inline-flex",
                 alignItems: "center",
                 borderRadius: "10px",
-                transition: "background-color 0.2s ease, transform 0.2s ease",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
                 whiteSpace: "nowrap",
               }}
             >
-              Donate Now
+              <span className="donate-btn-text">Donate Now</span>
             </Link>
 
             <Link

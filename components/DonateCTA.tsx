@@ -6,6 +6,38 @@ import Link from "next/link";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const maxDist = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  );
+  const scaleNeeded = (maxDist * 2.2) / 8;
+  const existing = btn.querySelector(".donate-ripple");
+  if (existing) existing.remove();
+  const circle = document.createElement("span");
+  circle.className = "donate-ripple";
+  circle.style.left = `${x}px`;
+  circle.style.top = `${y}px`;
+  circle.style.setProperty("--ripple-scale", String(scaleNeeded));
+  btn.appendChild(circle);
+  requestAnimationFrame(() => circle.classList.add("donate-ripple-active"));
+  btn.style.transform = "translateY(-2px)";
+  btn.style.boxShadow = "0 6px 24px rgba(212,175,55,0.45)";
+};
+
+const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  btn.querySelector(".donate-ripple")?.classList.remove("donate-ripple-active");
+  btn.style.transform = "translateY(0)";
+  btn.style.boxShadow = "none";
+};
+
 const AMOUNTS = [
   { label: "NPR 500",    sub: "School supplies, one month", param: "500"   },
   { label: "NPR 2,000",  sub: "Food and care, one month",   param: "2000"  },
@@ -40,8 +72,8 @@ export default function DonateCTA() {
           style={{
             fontFamily: "var(--font-sans)",
             fontWeight: 600,
-            fontSize: "12px",
-            letterSpacing: "0.18em",
+            fontSize: "11px",
+            letterSpacing: "0.16em",
             textTransform: "uppercase",
             color: "#D4AF37",
             marginBottom: "24px",
@@ -56,7 +88,7 @@ export default function DonateCTA() {
           style={{
             fontFamily: "var(--font-sans)",
             fontWeight: 700,
-            fontSize: "clamp(34px,4.5vw,54px)",
+            fontSize: "clamp(36px,4vw,48px)",
             lineHeight: 1.02,
             letterSpacing: "-0.03em",
             color: "#FFFFFF",
@@ -71,8 +103,8 @@ export default function DonateCTA() {
           style={{
             fontFamily: "var(--font-sans)",
             fontWeight: 400,
-            fontSize: "18px",
-            lineHeight: 1.75,
+            fontSize: "16px",
+            lineHeight: 1.7,
             color: "rgba(255,255,255,0.62)",
             marginBottom: "56px",
           }}
@@ -92,12 +124,24 @@ export default function DonateCTA() {
               key={amount.param}
               onClick={() => setSelected(i)}
               aria-pressed={selected === i}
+              onMouseEnter={(e) => {
+                if (selected !== i) {
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selected !== i) {
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+                }
+              }}
               style={{
                 fontFamily: "var(--font-sans)",
-                background: selected === i ? "rgba(212,175,55,0.08)" : "transparent",
+                background: selected === i ? "rgba(212,175,55,0.08)" : "rgba(255,255,255,0.04)",
                 border: selected === i
-                  ? "1.5px solid rgba(212,175,55,0.55)"
-                  : "1px solid rgba(255,255,255,0.10)",
+                  ? "1.5px solid #D4AF37"
+                  : "1px solid rgba(255,255,255,0.15)",
                 padding: "20px 24px",
                 cursor: "pointer",
                 textAlign: "left",
@@ -137,14 +181,9 @@ export default function DonateCTA() {
         <motion.div {...enter(0.32)}>
           <Link
             href={`/donate?amount=${AMOUNTS[selected].param}`}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "#c49e2f";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "#D4AF37";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-            }}
+            className="donate-spotlight-btn donate-spotlight-lg"
+            onMouseEnter={handleDonateEnter}
+            onMouseLeave={handleDonateLeave}
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
@@ -159,23 +198,46 @@ export default function DonateCTA() {
               display: "inline-flex",
               alignItems: "center",
               borderRadius: "10px",
-              transition: "background-color 0.2s ease, transform 0.2s ease",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
-            Donate Now
+            <span className="donate-btn-text">Donate Now</span>
           </Link>
 
-          <p
+          <div
             style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 400,
-              fontSize: "13px",
-              color: "rgba(255,255,255,0.28)",
-              marginTop: "20px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              marginTop: "12px",
             }}
           >
-            Bank details sent on contact &middot; hhnjumla25@gmail.com
-          </p>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.5)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              style={{ flexShrink: 0 }}
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 400,
+                fontSize: "11px",
+                color: "rgba(255,255,255,0.5)",
+              }}
+            >
+              Bank transfer details sent securely on contact
+            </span>
+          </div>
         </motion.div>
       </div>
     </section>

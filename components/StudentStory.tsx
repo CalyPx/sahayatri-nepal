@@ -32,16 +32,17 @@ export default function StudentStory() {
         style={{
           display: "grid",
           gridTemplateColumns: "1.4fr 1fr",
-          gap: "96px",
+          gap: "clamp(40px, 6vw, 96px)",
           alignItems: "start",
         }}
       >
         {/* Left — editorial image, offset upward */}
         <motion.div
           {...enter(0)}
+          className="story-image"
           style={{
             position: "relative",
-            height: "600px",
+            height: "clamp(300px, 45vw, 600px)",
             borderRadius: "24px",
             overflow: "hidden",
             marginTop: "-40px",
@@ -74,8 +75,8 @@ export default function StudentStory() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
-              fontSize: "12px",
-              letterSpacing: "0.18em",
+              fontSize: "11px",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#D4AF37",
               marginBottom: "32px",
@@ -126,8 +127,8 @@ export default function StudentStory() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "18px",
-              lineHeight: 1.8,
+              fontSize: "16px",
+              lineHeight: 1.7,
               color: "#4A5568",
               marginBottom: "16px",
             }}
@@ -140,8 +141,8 @@ export default function StudentStory() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "18px",
-              lineHeight: 1.8,
+              fontSize: "16px",
+              lineHeight: 1.7,
               color: "#4A5568",
               marginBottom: "44px",
             }}

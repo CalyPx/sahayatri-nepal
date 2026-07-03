@@ -5,6 +5,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
+const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const maxDist = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  );
+  const scaleNeeded = (maxDist * 2.2) / 8;
+  const existing = btn.querySelector(".donate-ripple");
+  if (existing) existing.remove();
+  const circle = document.createElement("span");
+  circle.className = "donate-ripple";
+  circle.style.left = `${x}px`;
+  circle.style.top = `${y}px`;
+  circle.style.setProperty("--ripple-scale", String(scaleNeeded));
+  btn.appendChild(circle);
+  requestAnimationFrame(() => circle.classList.add("donate-ripple-active"));
+  btn.style.boxShadow = "0 4px 16px rgba(212,175,55,0.4)";
+};
+
+const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const btn = e.currentTarget;
+  btn.querySelector(".donate-ripple")?.classList.remove("donate-ripple-active");
+  btn.style.boxShadow = "none";
+};
+
 const LINKS = [
   { label: "Home",     href: "/" },
   { label: "About Us", href: "/about" },
@@ -85,8 +115,8 @@ export default function Nav() {
               src="/sahayatri_nepal_logo.png"
               alt=""
               aria-hidden="true"
-              width={36}
-              height={36}
+              width={44}
+              height={44}
               style={{ objectFit: "contain" }}
               priority
             />
@@ -115,8 +145,9 @@ export default function Nav() {
                   aria-current={active ? "page" : undefined}
                   className={active ? "nav-link nav-link-active" : "nav-link"}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color =
-                      scrolledRef.current ? "#091426" : "#FFFFFF";
+                    if (!active) {
+                      (e.currentTarget as HTMLElement).style.color = "#D4AF37";
+                    }
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.color = linkColor(active);
@@ -124,8 +155,8 @@ export default function Nav() {
                   style={{
                     fontFamily: "var(--font-sans)",
                     fontWeight: 500,
-                    fontSize: "14px",
-                    letterSpacing: "0.005em",
+                    fontSize: "15px",
+                    letterSpacing: "0.02em",
                     textDecoration: "none",
                     color: linkColor(active),
                     transition: "color 0.3s ease",
@@ -139,12 +170,9 @@ export default function Nav() {
             {/* Donate — always gold */}
             <Link
               href="/donate"
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#C9A530";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#D4AF37";
-              }}
+              className="donate-spotlight-btn donate-spotlight-sm"
+              onMouseEnter={handleDonateEnter}
+              onMouseLeave={handleDonateLeave}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 600,
@@ -159,11 +187,11 @@ export default function Nav() {
                 alignItems: "center",
                 borderRadius: "10px",
                 marginLeft: "10px",
-                transition: "background-color 0.2s ease",
+                transition: "box-shadow 0.2s ease",
                 whiteSpace: "nowrap",
               }}
             >
-              Donate
+              <span className="donate-btn-text">Donate</span>
             </Link>
           </nav>
 
@@ -242,6 +270,9 @@ export default function Nav() {
             <Link
               href="/donate"
               onClick={() => setOpen(false)}
+              className="donate-spotlight-btn donate-spotlight-sm"
+              onMouseEnter={handleDonateEnter}
+              onMouseLeave={handleDonateLeave}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 600,
@@ -254,9 +285,10 @@ export default function Nav() {
                 borderRadius: "10px",
                 marginTop: "4px",
                 alignSelf: "flex-start",
+                transition: "box-shadow 0.2s ease",
               }}
             >
-              Donate
+              <span className="donate-btn-text">Donate</span>
             </Link>
           </nav>
         )}

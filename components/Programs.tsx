@@ -2,42 +2,34 @@
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const PROGRAMS = [
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-    ),
+    num: "01",
     title: "Education",
-    description: "Sign language curriculum and qualified teachers for deaf students across Karnali Province. Structured learning that meets national standards.",
+    photo: "/photos/education-classroom.jpg",
+    description:
+      "Sign language curriculum and qualified teachers for deaf students across Karnali Province. Structured learning that meets national standards.",
     href: "/projects#education",
   },
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-    ),
+    num: "02",
     title: "Safe Housing",
-    description: "Residential accommodation in Jumla for students who travel days from remote villages. A safe home so learning can happen.",
+    photo: "/photos/safe-housing-dormitory.jpg",
+    description:
+      "Residential accommodation in Jumla for students who travel days from remote villages. A safe home so learning can happen.",
     href: "/projects#housing",
   },
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="12" cy="8" r="5"/>
-        <path d="M20 21a8 8 0 0 0-16 0"/>
-      </svg>
-    ),
+    num: "03",
     title: "Life Skills",
-    description: "Art, sport, child safeguarding, and extracurricular programmes. We believe childhood matters as much as academics.",
+    photo: "/photos/life-skills-activity.jpg",
+    description:
+      "Art, sport, child safeguarding, and extracurricular programmes. We believe childhood matters as much as academics.",
     href: "/projects#life-skills",
   },
 ];
@@ -70,8 +62,8 @@ export default function Programs() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 600,
-              fontSize: "12px",
-              letterSpacing: "0.18em",
+              fontSize: "11px",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: "#D4AF37",
               marginBottom: "20px",
@@ -84,7 +76,7 @@ export default function Programs() {
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
-              fontSize: "clamp(34px,4.5vw,52px)",
+              fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
               color: "#0D1B2A",
@@ -110,39 +102,64 @@ export default function Programs() {
               {...enter(0.1 + i * 0.1)}
               onMouseEnter={(e) => {
                 if (!prefersReduced) {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-8px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 20px 48px rgba(0,0,0,0.10)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 8px 32px rgba(26,111,168,0.12)";
                 }
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 16px rgba(0,0,0,0.05)";
+                (e.currentTarget as HTMLElement).style.boxShadow =
+                  "0 2px 16px rgba(0,0,0,0.05)";
               }}
               style={{
                 background: "#FFFFFF",
                 borderRadius: "20px",
-                padding: "48px 40px",
+                padding: "36px 32px",
                 display: "flex",
                 flexDirection: "column",
                 boxShadow: "0 2px 16px rgba(0,0,0,0.05)",
-                transition: "transform 0.32s ease, box-shadow 0.32s ease",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "default",
+                overflow: "hidden",
               }}
             >
-              {/* Icon container — solid blue badge */}
+              {/* Full-bleed photo with badge overlay */}
               <div
                 style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "14px",
-                  background: "#1A6FA8",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "20px",
-                  flexShrink: 0,
+                  position: "relative",
+                  margin: "-36px -32px 24px -32px",
+                  height: "200px",
+                  overflow: "hidden",
                 }}
               >
-                {program.icon}
+                <Image
+                  src={program.photo}
+                  alt={`${program.title} programme`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                />
+                {/* Number badge as absolute overlay */}
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "16px",
+                    left: "16px",
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 700,
+                    fontSize: "13px",
+                    color: "#1A6FA8",
+                    background: "rgba(255,255,255,0.9)",
+                    backdropFilter: "blur(4px)",
+                    WebkitBackdropFilter: "blur(4px)",
+                    padding: "4px 10px",
+                    borderRadius: "4px",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {program.num}
+                </span>
               </div>
 
               <h3
@@ -164,7 +181,7 @@ export default function Programs() {
                   fontFamily: "var(--font-sans)",
                   fontWeight: 400,
                   fontSize: "16px",
-                  lineHeight: 1.75,
+                  lineHeight: 1.7,
                   color: "#6B7A8D",
                   marginBottom: "36px",
                   flex: 1,
