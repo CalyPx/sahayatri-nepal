@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import NepalMap from "./NepalMap";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const STATS = [
   { value: "47",   label: "Students"   },
@@ -14,16 +14,16 @@ const STATS = [
 
 export default function ImpactMap() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
 
   const enter = (delay: number) =>
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
-          transition: { duration: 0.55, delay, ease: EASE },
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
+          transition: { duration: 0.6, delay, ease: EASE },
         };
 
   return (
@@ -66,7 +66,7 @@ export default function ImpactMap() {
               fontSize: "11px",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "#C8A84B",
+              color: "#D4AF37",
               marginBottom: "20px",
             }}
           >
@@ -78,12 +78,12 @@ export default function ImpactMap() {
             id="map-heading"
             {...enter(0.14)}
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
-              color: "#0A1628",
+              color: "#091426",
               marginBottom: "24px",
               maxWidth: "20ch",
             }}
@@ -98,8 +98,8 @@ export default function ImpactMap() {
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
               fontSize: "16px",
-              lineHeight: 1.7,
-              color: "#5A6A7A",
+              lineHeight: 1.75,
+              color: "rgba(9,20,38,0.62)",
               marginBottom: "48px",
               maxWidth: "44ch",
             }}
@@ -127,7 +127,7 @@ export default function ImpactMap() {
                     fontSize: "clamp(28px, 3.2vw, 32px)",
                     lineHeight: 1,
                     letterSpacing: "-0.04em",
-                    color: "#0A1628",
+                    color: "#091426",
                     marginBottom: "6px",
                   }}
                 >
@@ -136,11 +136,11 @@ export default function ImpactMap() {
                 <p
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontWeight: 400,
+                    fontWeight: 500,
                     fontSize: "10px",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    color: "#8A9B8E",
+                    color: "rgba(9,20,38,0.45)",
                   }}
                 >
                   {s.label}

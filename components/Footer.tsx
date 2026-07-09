@@ -29,12 +29,13 @@ export default function Footer() {
     <footer
       role="contentinfo"
       style={{
-        background: "#0D1B2A",
+        position: "relative",
+        background: "#091426",
         padding: "100px 0 52px",
         borderTop: "1px solid rgba(255,255,255,0.05)",
       }}
     >
-      <div className="section-inner">
+      <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
         {/* Top grid */}
         <div
           className="footer-grid"
@@ -55,22 +56,23 @@ export default function Footer() {
                 alignItems: "center",
                 gap: "10px",
                 textDecoration: "none",
-                marginBottom: "24px",
+                marginBottom: "14px",
               }}
             >
               <Image
                 src="/sahayatri_nepal_logo.png"
-                alt="Sahayatri Nepal"
+                alt=""
+                aria-hidden="true"
                 width={34}
                 height={34}
                 style={{ objectFit: "contain" }}
               />
               <span
                 style={{
-                  fontFamily: "var(--font-sans)",
+                  fontFamily: "var(--font-display)",
                   fontWeight: 600,
                   fontSize: "16px",
-                  color: "#FFFFFF",
+                  color: "#FAFAF7",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -78,13 +80,27 @@ export default function Footer() {
               </span>
             </Link>
 
+            {/* Signature — gold script with a slow shimmer */}
+            <p
+              className="script-shimmer"
+              style={{
+                fontFamily: "var(--font-script)",
+                fontWeight: 700,
+                fontSize: "26px",
+                lineHeight: 1.3,
+                marginBottom: "22px",
+              }}
+            >
+              सहयात्री नेपाल
+            </p>
+
             <p
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 400,
                 fontSize: "14px",
                 lineHeight: 1.75,
-                color: "rgba(255,255,255,0.42)",
+                color: "rgba(255,255,255,0.62)",
                 maxWidth: "240px",
                 marginBottom: "28px",
               }}
@@ -95,16 +111,16 @@ export default function Footer() {
             <a
               href="mailto:hhnjumla25@gmail.com"
               onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.72)")
+                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.42)")
+                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.62)")
               }
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 400,
                 fontSize: "14px",
-                color: "rgba(255,255,255,0.42)",
+                color: "rgba(255,255,255,0.62)",
                 textDecoration: "none",
                 display: "block",
                 marginBottom: "6px",
@@ -118,7 +134,7 @@ export default function Footer() {
                 fontFamily: "var(--font-sans)",
                 fontWeight: 400,
                 fontSize: "14px",
-                color: "rgba(255,255,255,0.42)",
+                color: "rgba(255,255,255,0.62)",
               }}
             >
               +977 984-5165386
@@ -135,7 +151,7 @@ export default function Footer() {
                   fontSize: "11px",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(255,255,255,0.58)",
                   paddingBottom: "10px",
                   marginBottom: "0",
                   borderBottom: "1px solid rgba(255,255,255,0.12)",
@@ -149,16 +165,16 @@ export default function Footer() {
                     key={link.label}
                     href={link.href}
                     onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)")
+                      ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.90)")
                     }
                     onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)")
+                      ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.62)")
                     }
                     style={{
                       fontFamily: "var(--font-sans)",
                       fontWeight: 400,
                       fontSize: "14px",
-                      color: "rgba(255,255,255,0.45)",
+                      color: "rgba(255,255,255,0.62)",
                       textDecoration: "none",
                       transition: "color 0.2s ease",
                     }}
@@ -193,10 +209,10 @@ export default function Footer() {
                 ((e.currentTarget as HTMLElement).style.color = "#D4AF37")
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)")
+                ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.62)")
               }
               style={{
-                color: "rgba(255,255,255,0.5)",
+                color: "rgba(255,255,255,0.62)",
                 transition: "color 0.2s ease",
                 display: "flex",
                 alignItems: "center",
@@ -222,7 +238,7 @@ export default function Footer() {
                 fontFamily: "var(--font-sans)",
                 fontWeight: 400,
                 fontSize: "13px",
-                color: "rgba(255,255,255,0.22)",
+                color: "rgba(255,255,255,0.55)",
               }}
             >
               © 2025 Sahayatri Nepal · Registered NGO, Jumla, Karnali Province, Nepal
@@ -233,7 +249,7 @@ export default function Footer() {
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
               fontSize: "13px",
-              color: "rgba(255,255,255,0.22)",
+              color: "rgba(255,255,255,0.55)",
             }}
           >
             Partner: Learn for Life, United Kingdom

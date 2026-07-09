@@ -4,7 +4,14 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/* Headline preserved exactly, split for word-by-word arrival */
+const HEADLINE_LINES = [["Every", "child"], ["deserves", "a"], ["language."]];
+
+/* Film-grain: SVG feTurbulence tile, layered at 3% opacity */
+const NOISE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
   const btn = e.currentTarget;
@@ -41,23 +48,54 @@ const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
 export default function Hero() {
   const prefersReduced = useReducedMotion();
 
+  /* Opening sequence:
+     t=0      page is navy silence, nothing else
+     t=0.35s  headline arrives word by word (80ms stagger)
+     t=1.05s  the photo fades in behind the words
+     t=1.5s+  eyebrow, paragraph, CTAs settle in            */
   const fade = (delay: number, y = 12) =>
     prefersReduced
       ? {}
       : {
           initial: { opacity: 0, y },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.55, delay, ease: EASE },
+          transition: { duration: 0.6, delay, ease: EASE },
         };
+
+  const headlineContainer = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.35 } },
+  };
+  const headlineWord = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: EASE },
+    },
+  };
+
+  const h1Style: React.CSSProperties = {
+    fontFamily: "var(--font-display)",
+    fontWeight: 700,
+    fontSize: "clamp(54px,7vw,88px)",
+    lineHeight: 0.94,
+    letterSpacing: "-0.045em",
+    color: "#FFFFFF",
+    maxWidth: "9ch",
+    marginBottom: "34px",
+  };
 
   return (
     <section
+      id="hero"
       aria-label="Introduction"
       style={{
         position: "relative",
         width: "100%",
         minHeight: "100svh",
         overflow: "hidden",
+        background: "#091426",
       }}
     >
       {/* Background image */}
@@ -92,6 +130,36 @@ export default function Hero() {
         }}
       />
 
+      {/* Film grain */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: NOISE,
+          backgroundRepeat: "repeat",
+          opacity: 0.03,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Opening silence — navy cover that lifts once the words exist */}
+      {!prefersReduced && (
+        <motion.div
+          aria-hidden="true"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 1.4, delay: 1.05, ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "#091426",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
+      )}
+
       {/* Content */}
       <div
         style={{
@@ -109,9 +177,9 @@ export default function Hero() {
         }}
       >
         <div style={{ maxWidth: "560px", width: "100%" }}>
-          {/* Eyebrow */}
+          {/* Eyebrow — arrives with the photo, not before the words */}
           <motion.p
-            {...fade(0, 0)}
+            {...fade(1.5, 0)}
             className="hero-eyebrow"
             style={{
               fontFamily: "var(--font-sans)",
@@ -119,7 +187,7 @@ export default function Hero() {
               fontSize: "12px",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: "#D8A826",
+              color: "#D4AF37",
               marginBottom: "24px",
               whiteSpace: "nowrap",
             }}
@@ -127,36 +195,53 @@ export default function Hero() {
             Deaf Education · Karnali Province, Nepal
           </motion.p>
 
-          {/* Headline */}
-          <motion.h1
-            {...fade(0.06)}
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 700,
-              fontSize: "clamp(68px,7vw,88px)",
-              lineHeight: 0.92,
-              letterSpacing: "-0.045em",
-              color: "#FFFFFF",
-              maxWidth: "9ch",
-              marginBottom: "34px",
-            }}
-          >
-            Every child<br />
-            deserves a<br />
-            language.
-          </motion.h1>
+          {/* Headline — word by word, like first words being learned */}
+          {prefersReduced ? (
+            <h1 style={h1Style}>
+              Every child<br />
+              deserves a<br />
+              language.
+            </h1>
+          ) : (
+            <motion.h1
+              style={h1Style}
+              variants={headlineContainer}
+              initial="hidden"
+              animate="visible"
+              aria-label="Every child deserves a language."
+            >
+              {HEADLINE_LINES.map((line, li) => (
+                <span
+                  key={li}
+                  aria-hidden="true"
+                  style={{ display: "block" }}
+                >
+                  {line.map((word, wi) => (
+                    <motion.span
+                      key={wi}
+                      variants={headlineWord}
+                      style={{ display: "inline-block", willChange: "transform" }}
+                    >
+                      {word}
+                      {wi < line.length - 1 ? " " : ""}
+                    </motion.span>
+                  ))}
+                </span>
+              ))}
+            </motion.h1>
+          )}
 
           {/* Paragraph */}
           <motion.p
-            {...fade(0.12)}
+            {...fade(1.65)}
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
-              fontSize: "19px",
+              fontSize: "18px",
               lineHeight: 1.7,
               color: "rgba(255,255,255,.84)",
               marginTop: 0,
-              maxWidth: "500px",
+              maxWidth: "480px",
             }}
           >
             Sahayatri Nepal provides education, safe housing and life skills for deaf children in remote Karnali Province.
@@ -164,7 +249,7 @@ export default function Hero() {
 
           {/* CTAs */}
           <motion.div
-            {...fade(0.18, 0)}
+            {...fade(1.8, 0)}
             className="hero-ctas"
             style={{
               display: "flex",
@@ -186,8 +271,8 @@ export default function Hero() {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 textDecoration: "none",
-                color: "#05101f",
-                backgroundColor: "#D8A826",
+                color: "#091426",
+                backgroundColor: "#D4AF37",
                 paddingInline: "34px",
                 height: "54px",
                 display: "inline-flex",

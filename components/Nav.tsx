@@ -45,19 +45,41 @@ const LINKS = [
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const scrolledRef = useRef(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const lastY = useRef(0);
+  const heroBottom = useRef(0);
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => {
-      const s = window.scrollY > 80;
-      scrolledRef.current = s;
-      setScrolled(s);
+    const hero = document.getElementById("hero");
+    const measure = () => {
+      heroBottom.current = hero ? hero.offsetHeight : window.innerHeight;
     };
+    measure();
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 80);
+
+      // Smart nav: hide on scroll down, reappear on scroll up.
+      // Never hide inside the hero, and only after 200px.
+      const goingDown = y > lastY.current;
+      if (y <= Math.max(200, heroBottom.current - 76)) {
+        setHidden(false);
+      } else {
+        setHidden(goingDown);
+      }
+      lastY.current = y;
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", measure, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   const isActive = (href: string) =>
@@ -66,13 +88,13 @@ export default function Nav() {
   const linkColor = (active: boolean) =>
     active
       ? scrolled ? "#091426" : "#FFFFFF"
-      : scrolled ? "rgba(9,20,38,0.60)" : "rgba(255,255,255,0.80)";
+      : scrolled ? "rgba(9,20,38,0.60)" : "rgba(255,255,255,0.95)";
 
   return (
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:bg-white focus:text-[#0D1B2A] focus:px-4 focus:py-2 focus:text-sm focus:rounded"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:bg-white focus:text-[#091426] focus:px-4 focus:py-2 focus:text-sm focus:rounded"
       >
         Skip to main content
       </a>
@@ -85,14 +107,15 @@ export default function Nav() {
           left: 0,
           right: 0,
           zIndex: 50,
-          background: scrolled ? "rgba(255,255,255,0.92)" : "transparent",
+          background: scrolled ? "rgba(250,250,247,0.92)" : "transparent",
           backdropFilter: scrolled ? "blur(14px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
           borderBottom: scrolled
-            ? "1px solid rgba(0,0,0,0.06)"
+            ? "1px solid rgba(9,20,38,0.06)"
             : "1px solid transparent",
+          transform: hidden && !open ? "translateY(-100%)" : "translateY(0)",
           transition:
-            "background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease",
+            "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease",
         }}
       >
         <div
@@ -122,7 +145,7 @@ export default function Nav() {
             />
             <span
               style={{
-                fontFamily: "var(--font-sans)",
+                fontFamily: "var(--font-display)",
                 fontWeight: 600,
                 fontSize: "15px",
                 color: scrolled ? "#091426" : "#FFFFFF",
@@ -154,8 +177,8 @@ export default function Nav() {
                   }}
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontWeight: 500,
-                    fontSize: "15px",
+                    fontWeight: 600,
+                    fontSize: "14px",
                     letterSpacing: "0.02em",
                     textDecoration: "none",
                     color: linkColor(active),
@@ -179,7 +202,7 @@ export default function Nav() {
                 fontSize: "13px",
                 letterSpacing: "0.01em",
                 textDecoration: "none",
-                color: "#0D1B2A",
+                color: "#091426",
                 backgroundColor: "#D4AF37",
                 paddingInline: "20px",
                 height: "38px",
@@ -195,11 +218,12 @@ export default function Nav() {
             </Link>
           </nav>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger — icon animates into an X via transform/opacity only */}
           <button
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen((o) => !o)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            data-open={open}
             className="flex md:hidden"
             style={{
               flexDirection: "column",
@@ -222,11 +246,12 @@ export default function Nav() {
                   display: "block",
                   width: "20px",
                   height: "1.5px",
-                  backgroundColor: scrolled ? "#1A1A1A" : "#FFFFFF",
-                  transition: "background-color 0.3s ease, transform 0.2s ease, opacity 0.2s ease",
+                  backgroundColor: scrolled ? "#091426" : "#FFFFFF",
+                  transition:
+                    "background-color 0.3s ease, transform 0.25s ease-in-out, opacity 0.25s ease-in-out",
                   transform:
-                    i === 0 && open ? "rotate(45deg) translateY(6.5px)"
-                    : i === 2 && open ? "rotate(-45deg) translateY(-6.5px)"
+                    i === 0 && open ? "translateY(6.5px) rotate(45deg)"
+                    : i === 2 && open ? "translateY(-6.5px) rotate(-45deg)"
                     : "none",
                   opacity: i === 1 && open ? 0 : 1,
                 }}
@@ -235,19 +260,33 @@ export default function Nav() {
           </button>
         </div>
 
-        {/* Mobile drawer */}
-        {open && (
-          <nav
+        {/* Mobile drawer — always rendered (hidden via opacity/transform)
+            so the open transition has a "closed" DOM state to animate
+            from on the very first open, not just on subsequent closes. */}
+        <nav
             aria-label="Mobile navigation"
+            data-open={open}
             style={{
-              backgroundColor: "rgba(255,255,255,0.96)",
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              right: 0,
+              backgroundColor: "rgba(250,250,247,0.96)",
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)",
-              borderTop: "1px solid rgba(0,0,0,0.06)",
+              borderTop: "1px solid rgba(9,20,38,0.06)",
               padding: "24px clamp(24px,5vw,80px) 32px",
               display: "flex",
               flexDirection: "column",
               gap: "20px",
+              transformOrigin: "top",
+              opacity: open ? 1 : 0,
+              transform: open ? "translateY(0)" : "translateY(-8px)",
+              transition: open
+                ? "opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)"
+                : "opacity 0.2s ease-in, transform 0.2s ease-in",
+              pointerEvents: open ? "auto" : "none",
+              visibility: open ? "visible" : "hidden",
             }}
           >
             {LINKS.map((link) => (
@@ -255,6 +294,7 @@ export default function Nav() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setOpen(false)}
+                tabIndex={open ? 0 : -1}
                 style={{
                   fontFamily: "var(--font-sans)",
                   fontWeight: 500,
@@ -270,6 +310,7 @@ export default function Nav() {
             <Link
               href="/donate"
               onClick={() => setOpen(false)}
+              tabIndex={open ? 0 : -1}
               className="donate-spotlight-btn donate-spotlight-sm"
               onMouseEnter={handleDonateEnter}
               onMouseLeave={handleDonateLeave}
@@ -278,7 +319,7 @@ export default function Nav() {
                 fontWeight: 600,
                 fontSize: "13px",
                 textDecoration: "none",
-                color: "#0D1B2A",
+                color: "#091426",
                 backgroundColor: "#D4AF37",
                 padding: "12px 24px",
                 textAlign: "center",
@@ -290,8 +331,7 @@ export default function Nav() {
             >
               <span className="donate-btn-text">Donate</span>
             </Link>
-          </nav>
-        )}
+        </nav>
       </header>
     </>
   );

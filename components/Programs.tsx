@@ -5,7 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const PROGRAMS = [
   {
@@ -36,15 +36,15 @@ const PROGRAMS = [
 
 export default function Programs() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
 
-  const enter = (delay: number) =>
+  const enter = (delay: number, y = 32) =>
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+          initial: { opacity: 0, y },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y },
           transition: { duration: 0.6, delay, ease: EASE },
         };
 
@@ -52,7 +52,7 @@ export default function Programs() {
     <section
       ref={ref}
       aria-labelledby="programs-heading"
-      style={{ background: "#F4F4F1", padding: "clamp(90px,10vw,140px) 0" }}
+      style={{ background: "#F0F7FF", padding: "clamp(90px,10vw,140px) 0" }}
     >
       <div className="section-inner">
 
@@ -74,19 +74,20 @@ export default function Programs() {
           <h2
             id="programs-heading"
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
-              color: "#0D1B2A",
+              color: "#091426",
             }}
           >
             Three programmes.<br />One commitment.
           </h2>
         </motion.div>
 
-        {/* Cards */}
+        {/* Cards — hover handled in CSS (.program-card in globals.css):
+            lift -6px, photo zoom 1.06/600ms, gold left border, arrow slide */}
         <div
           className="three-col"
           style={{
@@ -99,45 +100,32 @@ export default function Programs() {
           {PROGRAMS.map((program, i) => (
             <motion.div
               key={program.title}
-              {...enter(0.1 + i * 0.1)}
-              onMouseEnter={(e) => {
-                if (!prefersReduced) {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 8px 32px rgba(26,111,168,0.12)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 2px 16px rgba(0,0,0,0.05)";
-              }}
+              {...enter(0.1 + i * 0.1, 40)}
+              className="program-card"
               style={{
                 background: "#FFFFFF",
-                borderRadius: "20px",
-                padding: "36px 32px",
+                borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
-                boxShadow: "0 2px 16px rgba(0,0,0,0.05)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                cursor: "default",
+                boxShadow: "0 2px 16px rgba(9,20,38,0.05)",
                 overflow: "hidden",
               }}
             >
-              {/* Full-bleed photo with badge overlay */}
+              {/* Photo with badge overlay */}
               <div
+                className="program-photo"
                 style={{
                   position: "relative",
-                  margin: "-36px -32px 24px -32px",
                   height: "200px",
                   overflow: "hidden",
+                  flexShrink: 0,
                 }}
               >
                 <Image
                   src={program.photo}
                   alt={`${program.title} programme`}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
                 />
                 {/* Number badge as absolute overlay */}
@@ -150,7 +138,7 @@ export default function Programs() {
                     fontWeight: 700,
                     fontSize: "13px",
                     color: "#1A6FA8",
-                    background: "rgba(255,255,255,0.9)",
+                    background: "rgba(250,250,247,0.92)",
                     backdropFilter: "blur(4px)",
                     WebkitBackdropFilter: "blur(4px)",
                     padding: "4px 10px",
@@ -162,60 +150,65 @@ export default function Programs() {
                 </span>
               </div>
 
-              <h3
+              <div
                 style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 700,
-                  fontSize: "22px",
-                  color: "#0D1B2A",
-                  letterSpacing: "-0.02em",
-                  marginBottom: "16px",
-                  lineHeight: 1.2,
-                }}
-              >
-                {program.title}
-              </h3>
-
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 400,
-                  fontSize: "16px",
-                  lineHeight: 1.7,
-                  color: "#6B7A8D",
-                  marginBottom: "36px",
+                  padding: "28px 29px 32px",
+                  display: "flex",
+                  flexDirection: "column",
                   flex: 1,
                 }}
               >
-                {program.description}
-              </p>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: "22px",
+                    color: "#091426",
+                    letterSpacing: "-0.02em",
+                    marginBottom: "14px",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {program.title}
+                </h3>
 
-              <Link
-                href={program.href}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = "#0D1B2A")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = "#D4AF37")
-                }
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 600,
-                  fontSize: "13px",
-                  letterSpacing: "0.04em",
-                  textDecoration: "none",
-                  color: "#D4AF37",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  alignSelf: "flex-start",
-                  transition: "color 0.2s ease",
-                  borderBottom: "1px solid #D4AF37",
-                  paddingBottom: "2px",
-                }}
-              >
-                Learn more <span aria-hidden="true">→</span>
-              </Link>
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 400,
+                    fontSize: "15px",
+                    lineHeight: 1.7,
+                    color: "rgba(9,20,38,0.58)",
+                    marginBottom: "32px",
+                    flex: 1,
+                  }}
+                >
+                  {program.description}
+                </p>
+
+                <Link
+                  href={program.href}
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 600,
+                    fontSize: "13px",
+                    letterSpacing: "0.04em",
+                    textDecoration: "none",
+                    color: "#D4AF37",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    alignSelf: "flex-start",
+                    borderBottom: "1px solid #D4AF37",
+                    paddingBottom: "2px",
+                  }}
+                >
+                  Learn more
+                  <span className="program-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>

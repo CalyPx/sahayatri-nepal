@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { Fragment, useRef, useEffect, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
+const COUNT_DURATION = 1200; // spec: 1200ms, ease-out
 
 const STATS = [
   { target: 47,  suffix: "",  label: "Students enrolled", sub: "Karnali Province" },
@@ -11,7 +12,7 @@ const STATS = [
   { target: 12,  suffix: "",  label: "Years of service",   sub: "Since 2013"      },
 ];
 
-function useCountUp(target: number, duration: number, active: boolean, reduced: boolean) {
+function useCountUp(target: number, active: boolean, reduced: boolean) {
   const [value, setValue] = useState(reduced ? target : 0);
   useEffect(() => {
     if (!active) return;
@@ -19,34 +20,34 @@ function useCountUp(target: number, duration: number, active: boolean, reduced: 
     const start = performance.now();
     let raf: number;
     const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
+      const t = Math.min((now - start) / COUNT_DURATION, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // ease-out
       setValue(Math.round(eased * target));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [active, target, duration, reduced]);
+  }, [active, target, reduced]);
   return value;
 }
 
 export default function ImpactNumbers() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
   const reduced = !!prefersReduced;
 
-  const c0 = useCountUp(STATS[0].target, 2000, inView, reduced);
-  const c1 = useCountUp(STATS[1].target, 2200, inView, reduced);
-  const c2 = useCountUp(STATS[2].target, 1800, inView, reduced);
+  const c0 = useCountUp(STATS[0].target, inView, reduced);
+  const c1 = useCountUp(STATS[1].target, inView, reduced);
+  const c2 = useCountUp(STATS[2].target, inView, reduced);
   const counts = [c0, c1, c2];
 
   const enter = (delay: number) =>
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
           transition: { duration: 0.6, delay, ease: EASE },
         };
 
@@ -54,7 +55,7 @@ export default function ImpactNumbers() {
     <section
       ref={ref}
       aria-labelledby="impact-heading"
-      style={{ background: "#FFFFFF", padding: "clamp(90px,10vw,140px) 0" }}
+      style={{ background: "#FAFAF7", padding: "clamp(90px,10vw,140px) 0" }}
     >
       <div className="section-inner">
 
@@ -76,12 +77,12 @@ export default function ImpactNumbers() {
           <h2
             id="impact-heading"
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.05,
               letterSpacing: "-0.03em",
-              color: "#0D1B2A",
+              color: "#091426",
               marginBottom: "16px",
             }}
           >
@@ -93,7 +94,7 @@ export default function ImpactNumbers() {
               fontWeight: 400,
               fontSize: "16px",
               lineHeight: 1.7,
-              color: "#6B7A8D",
+              color: "rgba(9,20,38,0.55)",
               maxWidth: "48ch",
             }}
           >
@@ -107,12 +108,8 @@ export default function ImpactNumbers() {
           style={{ display: "flex", alignItems: "flex-start", gap: 0 }}
         >
           {STATS.map((stat, i) => (
-            <>
-              <motion.div
-                key={stat.label}
-                {...enter(0.1 + i * 0.12)}
-                style={{ flex: 1 }}
-              >
+            <Fragment key={stat.label}>
+              <motion.div {...enter(0.1 + i * 0.12)} style={{ flex: 1 }}>
                 <div
                   aria-label={`${stat.target}${stat.suffix}`}
                   style={{
@@ -125,14 +122,25 @@ export default function ImpactNumbers() {
                     marginBottom: "20px",
                   }}
                 >
-                  {counts[i]}{stat.suffix}
+                  {counts[i]}
+                  {stat.suffix && (
+                    /* suffix appended once the count completes */
+                    <span
+                      style={{
+                        opacity: counts[i] >= stat.target ? 1 : 0,
+                        transition: "opacity 0.25s ease",
+                      }}
+                    >
+                      {stat.suffix}
+                    </span>
+                  )}
                 </div>
                 <p
                   style={{
                     fontFamily: "var(--font-sans)",
                     fontWeight: 600,
                     fontSize: "18px",
-                    color: "#0D1B2A",
+                    color: "#091426",
                     marginBottom: "6px",
                     letterSpacing: "-0.01em",
                   }}
@@ -144,7 +152,7 @@ export default function ImpactNumbers() {
                     fontFamily: "var(--font-sans)",
                     fontWeight: 400,
                     fontSize: "14px",
-                    color: "#6B7A8D",
+                    color: "rgba(9,20,38,0.50)",
                   }}
                 >
                   {stat.sub}
@@ -153,20 +161,19 @@ export default function ImpactNumbers() {
 
               {i < STATS.length - 1 && (
                 <div
-                  key={`divider-${i}`}
                   className="impact-divider"
                   aria-hidden="true"
                   style={{
                     width: "1px",
                     height: "100px",
-                    background: "rgba(0,0,0,0.08)",
+                    background: "rgba(9,20,38,0.08)",
                     alignSelf: "center",
                     flexShrink: 0,
                     margin: "0 64px",
                   }}
                 />
               )}
-            </>
+            </Fragment>
           ))}
         </div>
       </div>

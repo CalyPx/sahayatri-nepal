@@ -4,15 +4,11 @@
 
 /* ── Design tokens ─────────────────────────────────────── */
 :root {
-  --white:     #FFFFFF;
-  --off-white: #FAFAF8;
-  --navy:      #0D1B2A;
-  --gold:      #D4AF37;
-  --gray:      #6B7A8D;
-  --text:      #0D1B2A;
-
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --navy:  #091426;
+  --blue:  #1A6FA8;
+  --gold:  #D4AF37;
+  --ice:   #F0F7FF;
+  --white: #FAFAF7;
 
   /* 8px spacing scale */
   --s-8:  8px;
@@ -28,13 +24,20 @@
   --s-160: 160px;
 
   --max-w: 1200px;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: var(--font-sans), system-ui, sans-serif; }
+  body {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    /* Script stack: Dancing Script for Latin, Kalam for Devanagari.
+       Composed here (not :root) because the next/font variables are
+       defined on <body> — on :root they don't exist yet and the
+       whole declaration would collapse. */
+    --font-script: var(--font-dancing), var(--font-kalam), cursive;
+  }
 }
 
 /* ── Focus ring ─────────────────────────────────────────── */
@@ -62,7 +65,7 @@
   left: 0;
   width: 0;
   height: 1.5px;
-  background: #D4AF37;
+  background: var(--gold);
   transition: width 0.3s ease;
 }
 .nav-link:hover::after,
@@ -74,6 +77,69 @@
 @keyframes kenburns {
   from { transform: scale(1.0); }
   to   { transform: scale(1.04); }
+}
+
+/* ── Programme cards: premium hover ─────────────────────── */
+.program-card {
+  border-left: 3px solid transparent;
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.program-card:hover,
+.program-card:focus-within {
+  transform: translateY(-6px);
+  border-left-color: var(--gold);
+  box-shadow: 0 20px 60px rgba(9,20,38,0.10), 0 2px 8px rgba(9,20,38,0.06);
+}
+.program-photo img {
+  transition: transform 0.6s var(--ease);
+  will-change: transform;
+}
+.program-card:hover .program-photo img,
+.program-card:focus-within .program-photo img {
+  transform: scale(1.06);
+}
+.program-arrow {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease, transform 0.2s var(--ease);
+}
+.program-card:hover .program-arrow,
+.program-card:focus-within .program-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Reports list: row slide (transform, not padding) ───── */
+.report-row-inner {
+  transition: transform 0.25s var(--ease);
+}
+.report-row:hover .report-row-inner,
+.report-row:focus-visible .report-row-inner {
+  transform: translateX(8px);
+}
+
+/* ── Quote watermark (decorative pseudo-element text) ───── */
+.quote-watermark::before {
+  content: "सहयात्री";
+}
+
+/* ── Footer script shimmer ──────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.script-shimmer {
+  background: linear-gradient(90deg, #D4AF37 0%, #F5E68A 50%, #D4AF37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
 }
 
 /* ── Reduced motion ─────────────────────────────────────── */

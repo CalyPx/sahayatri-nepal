@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
   const btn = e.currentTarget;
@@ -46,7 +46,7 @@ const AMOUNTS = [
 
 export default function DonateCTA() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
   const [selected, setSelected] = useState(1);
 
@@ -54,8 +54,8 @@ export default function DonateCTA() {
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
           transition: { duration: 0.6, delay, ease: EASE },
         };
 
@@ -63,7 +63,12 @@ export default function DonateCTA() {
     <section
       ref={ref}
       aria-labelledby="donate-heading"
-      style={{ background: "#0D1B2A", padding: "clamp(90px,10vw,140px) 0" }}
+      style={{
+        position: "relative",
+        background: "#091426",
+        padding: "clamp(90px,10vw,140px) 0",
+        overflow: "hidden",
+      }}
     >
       <div className="section-inner" style={{ maxWidth: "680px" }}>
 
@@ -86,12 +91,12 @@ export default function DonateCTA() {
           id="donate-heading"
           {...enter(0.08)}
           style={{
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: "clamp(36px,4vw,48px)",
             lineHeight: 1.02,
             letterSpacing: "-0.03em",
-            color: "#FFFFFF",
+            color: "#FAFAF7",
             marginBottom: "24px",
           }}
         >
@@ -112,70 +117,108 @@ export default function DonateCTA() {
           Every rupee goes directly to students in Jumla, Karnali Province.
         </motion.p>
 
-        {/* Amount selector */}
+        {/* Amount selector — pulse on select, checkmark, others dim */}
         <motion.div
           {...enter(0.24)}
           role="group"
           aria-label="Choose a donation amount"
           style={{ display: "flex", gap: "14px", marginBottom: "40px", flexWrap: "wrap" }}
         >
-          {AMOUNTS.map((amount, i) => (
-            <button
-              key={amount.param}
-              onClick={() => setSelected(i)}
-              aria-pressed={selected === i}
-              onMouseEnter={(e) => {
-                if (selected !== i) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)";
-                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
+          {AMOUNTS.map((amount, i) => {
+            const isSelected = selected === i;
+            return (
+              <motion.button
+                key={amount.param}
+                onClick={() => setSelected(i)}
+                aria-pressed={isSelected}
+                initial={false}
+                animate={
+                  prefersReduced
+                    ? { opacity: isSelected ? 1 : 0.6 }
+                    : isSelected
+                    ? { scale: [0.97, 1], opacity: 1 }
+                    : { scale: 1, opacity: 0.6 }
                 }
-              }}
-              onMouseLeave={(e) => {
-                if (selected !== i) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
-                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
-                }
-              }}
-              style={{
-                fontFamily: "var(--font-sans)",
-                background: selected === i ? "rgba(212,175,55,0.08)" : "rgba(255,255,255,0.04)",
-                border: selected === i
-                  ? "1.5px solid #D4AF37"
-                  : "1px solid rgba(255,255,255,0.15)",
-                padding: "20px 24px",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "border-color 0.2s ease, background 0.2s ease",
-                borderRadius: "12px",
-                flex: "1 1 160px",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                  fontSize: "20px",
-                  color: selected === i ? "#D4AF37" : "#FFFFFF",
-                  lineHeight: 1,
-                  marginBottom: "6px",
-                  transition: "color 0.2s ease",
+                transition={{
+                  scale: { duration: 0.15, ease: "easeOut" },
+                  opacity: { duration: 0.2, ease: "easeOut" },
                 }}
-              >
-                {amount.label}
-              </div>
-              <div
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+                  }
+                }}
                 style={{
+                  position: "relative",
                   fontFamily: "var(--font-sans)",
-                  fontWeight: 400,
-                  fontSize: "12px",
-                  color: "rgba(255,255,255,0.38)",
-                  lineHeight: 1.4,
+                  background: isSelected ? "rgba(212,175,55,0.08)" : "rgba(255,255,255,0.04)",
+                  border: isSelected
+                    ? "1.5px solid #D4AF37"
+                    : "1px solid rgba(255,255,255,0.15)",
+                  padding: "20px 24px",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "border-color 0.2s ease, background 0.2s ease",
+                  borderRadius: "12px",
+                  flex: "1 1 160px",
                 }}
               >
-                {amount.sub}
-              </div>
-            </button>
-          ))}
+                {/* Checkmark — fades in at top-right of the selected box */}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D4AF37"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    opacity: isSelected ? 1 : 0,
+                    transition: "opacity 0.2s ease",
+                  }}
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    color: isSelected ? "#D4AF37" : "#FAFAF7",
+                    lineHeight: 1,
+                    marginBottom: "6px",
+                    transition: "color 0.2s ease",
+                  }}
+                >
+                  {amount.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 400,
+                    fontSize: "12px",
+                    color: "rgba(255,255,255,0.58)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {amount.sub}
+                </div>
+              </motion.button>
+            );
+          })}
         </motion.div>
 
         <motion.div {...enter(0.32)}>
@@ -191,7 +234,7 @@ export default function DonateCTA() {
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               textDecoration: "none",
-              color: "#0D1B2A",
+              color: "#091426",
               backgroundColor: "#D4AF37",
               paddingInline: "48px",
               height: "56px",
@@ -217,7 +260,7 @@ export default function DonateCTA() {
               height="12"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="rgba(255,255,255,0.5)"
+              stroke="rgba(255,255,255,0.62)"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -232,7 +275,7 @@ export default function DonateCTA() {
                 fontFamily: "var(--font-sans)",
                 fontWeight: 400,
                 fontSize: "11px",
-                color: "rgba(255,255,255,0.5)",
+                color: "rgba(255,255,255,0.62)",
               }}
             >
               Bank transfer details sent securely on contact

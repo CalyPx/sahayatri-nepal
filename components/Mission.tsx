@@ -2,29 +2,30 @@
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Mission() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
 
   const enter = (delay: number) =>
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 16 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
-          transition: { duration: 0.55, delay, ease: EASE },
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
+          transition: { duration: 0.6, delay, ease: EASE },
         };
 
   return (
     <section
       ref={ref}
       aria-labelledby="mission-heading"
-      style={{ background: "#FAFAF8", padding: "clamp(80px,9vw,128px) 0 64px" }}
+      style={{ background: "#FAFAF7", padding: "clamp(80px,9vw,128px) 0 clamp(80px,9vw,120px)" }}
     >
       <div
         className="section-inner two-col"
@@ -56,12 +57,12 @@ export default function Mission() {
             id="mission-heading"
             {...enter(0.07)}
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.08,
               letterSpacing: "-0.03em",
-              color: "#0D1B2A",
+              color: "#091426",
               marginBottom: "32px",
               maxWidth: "18ch",
             }}
@@ -75,8 +76,8 @@ export default function Mission() {
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
               fontSize: "16px",
-              lineHeight: 1.7,
-              color: "#4A5568",
+              lineHeight: 1.75,
+              color: "rgba(9,20,38,0.68)",
               marginBottom: "20px",
               maxWidth: "54ch",
             }}
@@ -90,8 +91,8 @@ export default function Mission() {
               fontFamily: "var(--font-sans)",
               fontWeight: 400,
               fontSize: "16px",
-              lineHeight: 1.7,
-              color: "#4A5568",
+              lineHeight: 1.75,
+              color: "rgba(9,20,38,0.68)",
               marginBottom: "44px",
               maxWidth: "54ch",
             }}
@@ -106,7 +107,7 @@ export default function Mission() {
                 (e.currentTarget as HTMLElement).style.borderColor = "#D4AF37";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(13,27,42,0.22)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(9,20,38,0.22)";
               }}
               style={{
                 fontFamily: "var(--font-sans)",
@@ -114,11 +115,11 @@ export default function Mission() {
                 fontSize: "14px",
                 letterSpacing: "0.01em",
                 textDecoration: "none",
-                color: "#0D1B2A",
+                color: "#091426",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                borderBottom: "1.5px solid rgba(13,27,42,0.22)",
+                borderBottom: "1.5px solid rgba(9,20,38,0.22)",
                 paddingBottom: "4px",
                 transition: "border-color 0.2s ease",
               }}
@@ -128,70 +129,50 @@ export default function Mission() {
           </motion.div>
         </div>
 
-        {/* RIGHT — editorial pull quote */}
-        <motion.div
-          {...enter(0.15)}
-          style={{ paddingTop: "clamp(0px,2vw,20px)" }}
-        >
-          {/* Gold accent line */}
+        {/* RIGHT — editorial photo with mono caption
+            (the pull quote moved to its own dark section mid-page) */}
+        <motion.div {...enter(0.15)} style={{ paddingTop: "clamp(0px,2vw,20px)" }}>
           <div
             aria-hidden="true"
             style={{
               width: "32px",
               height: "2px",
               background: "#D4AF37",
-              marginBottom: "32px",
+              marginBottom: "24px",
             }}
           />
 
-          <blockquote
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-sans)",
-              fontStyle: "italic",
-              fontWeight: 400,
-              fontSize: "clamp(21px,2.2vw,28px)",
-              lineHeight: 1.5,
-              letterSpacing: "-0.015em",
-              color: "#2C3A4A",
-              marginBottom: "32px",
-            }}
-          >
-            &ldquo;The children who come to us are not broken. They have simply been waiting for a language.&rdquo;
-          </blockquote>
-
-          {/* Author */}
           <div
             style={{
-              borderLeft: "2px solid #D4AF37",
-              paddingLeft: "12px",
+              position: "relative",
+              width: "100%",
+              aspectRatio: "4 / 3",
+              overflow: "hidden",
+              borderRadius: "2px",
             }}
           >
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontWeight: 600,
-                fontSize: "13px",
-                color: "#0A1628",
-                letterSpacing: "0.01em",
-                margin: 0,
-              }}
-            >
-              DEVENDRA TIMILSENA
-            </p>
-            <p
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 400,
-                fontSize: "12px",
-                color: "#5A6A7A",
-                marginTop: "2px",
-                marginBottom: 0,
-              }}
-            >
-              Chief Advisor, Sahayatri Nepal
-            </p>
+            <Image
+              src="/playground.webp"
+              alt="Students playing on the newly installed playground in Jumla"
+              fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              style={{ objectFit: "cover" }}
+            />
           </div>
+
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontWeight: 400,
+              fontSize: "11px",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "rgba(9,20,38,0.45)",
+              marginTop: "14px",
+            }}
+          >
+            Playground installation — Jumla, May 2025
+          </p>
         </motion.div>
       </div>
     </section>

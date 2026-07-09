@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const SECONDARY_REPORTS = [
   { date: "May 2025", title: "SEE Exam Results 2025",          href: "/reports/see-2025" },
@@ -14,15 +14,15 @@ const SECONDARY_REPORTS = [
 
 export default function Reports() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const prefersReduced = useReducedMotion();
 
   const enter = (delay: number) =>
     prefersReduced
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
           transition: { duration: 0.6, delay, ease: EASE },
         };
 
@@ -30,7 +30,7 @@ export default function Reports() {
     <section
       ref={ref}
       aria-labelledby="reports-heading"
-      style={{ background: "#FAFAF8", padding: "clamp(90px,10vw,140px) 0" }}
+      style={{ background: "#F0F7FF", padding: "clamp(90px,10vw,140px) 0" }}
     >
       <div className="section-inner">
 
@@ -52,80 +52,77 @@ export default function Reports() {
           <h2
             id="reports-heading"
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "clamp(36px,4vw,48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
-              color: "#0D1B2A",
+              color: "#091426",
             }}
           >
             Transparency is part of the work.
           </h2>
         </motion.div>
 
-        {/* Reports list */}
-        <div
-          style={{
-            borderTop: "1px solid rgba(0,0,0,0.07)",
-          }}
-        >
+        {/* Reports list — rows slide on transform, not padding */}
+        <div style={{ borderTop: "1px solid rgba(9,20,38,0.08)" }}>
           {SECONDARY_REPORTS.map((report, i) => (
             <motion.div key={report.title} {...enter(0.18 + i * 0.07)}>
               <Link
                 href={report.href}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.paddingLeft = "8px";
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.10)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.paddingLeft = "0";
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.07)";
-                }}
+                className="report-row"
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: "block",
                   padding: "22px 0",
-                  borderBottom: "1px solid rgba(0,0,0,0.07)",
+                  borderBottom: "1px solid rgba(9,20,38,0.08)",
                   textDecoration: "none",
-                  gap: "24px",
-                  transition: "padding-left 0.2s ease, border-color 0.2s ease",
                 }}
               >
                 <span
+                  className="report-row-inner"
                   style={{
-                    fontFamily: "var(--font-sans)",
-                    fontWeight: 400,
-                    fontSize: "13px",
-                    color: "#9AA5B1",
-                    flexShrink: 0,
-                    width: "80px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "24px",
                   }}
                 >
-                  {report.date}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontWeight: 500,
-                    fontSize: "16px",
-                    color: "#0D1B2A",
-                    flex: 1,
-                  }}
-                >
-                  {report.title}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontWeight: 500,
-                    fontSize: "13px",
-                    color: "#D4AF37",
-                    flexShrink: 0,
-                  }}
-                >
-                  Read →
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 400,
+                      fontSize: "12px",
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase",
+                      color: "rgba(9,20,38,0.42)",
+                      flexShrink: 0,
+                      width: "92px",
+                    }}
+                  >
+                    {report.date}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontWeight: 500,
+                      fontSize: "16px",
+                      color: "#091426",
+                      flex: 1,
+                    }}
+                  >
+                    {report.title}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontWeight: 500,
+                      fontSize: "13px",
+                      color: "#D4AF37",
+                      flexShrink: 0,
+                    }}
+                  >
+                    Read →
+                  </span>
                 </span>
               </Link>
             </motion.div>
@@ -136,7 +133,7 @@ export default function Reports() {
           <Link
             href="/reports"
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = "#0D1B2A")
+              ((e.currentTarget as HTMLElement).style.color = "#091426")
             }
             onMouseLeave={(e) =>
               ((e.currentTarget as HTMLElement).style.color = "#D4AF37")
