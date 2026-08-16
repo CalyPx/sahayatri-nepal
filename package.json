@@ -9,18 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1111.0",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
     "@types/d3-geo": "^3.1.0",
     "d3-geo": "^3.1.1",
     "framer-motion": "^12.42.0",
+    "jose": "^6.2.9",
     "next": "14.2.35",
+    "nodemailer": "^9.0.5",
+    "pg": "^8.23.0",
+    "prisma": "^7.9.1",
     "react": "^18",
     "react-dom": "^18",
     "topojson-client": "^3.1.0",
     "topojson-server": "^3.0.1",
-    "topojson-simplify": "^3.0.3"
+    "topojson-simplify": "^3.0.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
+    "@types/pg": "^8.21.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
@@ -29,6 +39,7 @@
     "postcss": "^8",
     "puppeteer": "^25.2.1",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

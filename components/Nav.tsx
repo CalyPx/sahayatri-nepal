@@ -4,46 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-
-const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  const btn = e.currentTarget;
-  const rect = btn.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const maxDist = Math.max(
-    Math.hypot(x, y),
-    Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y),
-    Math.hypot(rect.width - x, rect.height - y),
-  );
-  const scaleNeeded = (maxDist * 2.2) / 8;
-  const existing = btn.querySelector(".donate-ripple");
-  if (existing) existing.remove();
-  const circle = document.createElement("span");
-  circle.className = "donate-ripple";
-  circle.style.left = `${x}px`;
-  circle.style.top = `${y}px`;
-  circle.style.setProperty("--ripple-scale", String(scaleNeeded));
-  btn.appendChild(circle);
-  requestAnimationFrame(() => circle.classList.add("donate-ripple-active"));
-  btn.style.boxShadow = "0 4px 16px rgba(212,175,55,0.4)";
-};
-
-const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  const btn = e.currentTarget;
-  btn.querySelector(".donate-ripple")?.classList.remove("donate-ripple-active");
-  btn.style.boxShadow = "none";
-};
-
-const LINKS = [
-  { label: "Home",     href: "/" },
-  { label: "About Us", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Gallery",  href: "/gallery" },
-  { label: "Contact",  href: "/contact" },
-];
+import { useLanguage } from "./LanguageContext";
 
 export default function Nav() {
+  const { locale, setLocale, t } = useLanguage();
+  const LINKS = [
+    { label: t.nav.home,     href: "/" },
+    { label: t.nav.about,    href: "/about" },
+    { label: t.nav.projects, href: "/projects" },
+    { label: t.nav.gallery,  href: "/gallery" },
+    { label: t.nav.contact,  href: "/contact" },
+  ];
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
@@ -122,7 +93,8 @@ export default function Nav() {
           style={{
             width: "100%",
             padding: "0 clamp(24px,5vw,80px)",
-            height: "76px",
+            height: scrolled ? "72px" : "88px",
+            transition: "height 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -138,8 +110,8 @@ export default function Nav() {
               src="/sahayatri_nepal_logo.png"
               alt=""
               aria-hidden="true"
-              width={44}
-              height={44}
+              width={51}
+              height={51}
               style={{ objectFit: "contain" }}
               priority
             />
@@ -158,7 +130,7 @@ export default function Nav() {
           </Link>
 
           {/* Desktop nav */}
-          <nav aria-label="Primary" className="hidden md:flex items-center" style={{ gap: "26px" }}>
+          <nav aria-label="Primary" className="hidden md:flex items-center" style={{ gap: "38px" }}>
             {LINKS.map((link) => {
               const active = isActive(link.href);
               return (
@@ -169,7 +141,7 @@ export default function Nav() {
                   className={active ? "nav-link nav-link-active" : "nav-link"}
                   onMouseEnter={(e) => {
                     if (!active) {
-                      (e.currentTarget as HTMLElement).style.color = "#D4AF37";
+                      (e.currentTarget as HTMLElement).style.color = scrolled ? "#8C6D1F" : "#D4AF37";
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -190,12 +162,17 @@ export default function Nav() {
               );
             })}
 
-            {/* Donate — always gold */}
+            {/* Donate — pill shape, gold, subtle scale on hover */}
             <Link
               href="/donate"
-              className="donate-spotlight-btn donate-spotlight-sm"
-              onMouseEnter={handleDonateEnter}
-              onMouseLeave={handleDonateLeave}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(212,175,55,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 8px rgba(212,175,55,0.18)";
+              }}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 600,
@@ -204,18 +181,44 @@ export default function Nav() {
                 textDecoration: "none",
                 color: "#091426",
                 backgroundColor: "#D4AF37",
-                paddingInline: "20px",
-                height: "38px",
+                paddingInline: "22px",
+                height: "40px",
                 display: "inline-flex",
                 alignItems: "center",
-                borderRadius: "10px",
+                gap: "6px",
+                borderRadius: "var(--radius-pill)",
                 marginLeft: "10px",
-                transition: "box-shadow 0.2s ease",
+                boxShadow: "0 2px 8px rgba(212,175,55,0.18)",
+                transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease",
                 whiteSpace: "nowrap",
               }}
             >
-              <span className="donate-btn-text">Donate</span>
+              {t.nav.donate}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
+
+            {/* Language toggle */}
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "en" ? "ne" : "en")}
+              aria-label={locale === "en" ? "Switch to Nepali" : "Switch to English"}
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 600,
+                fontSize: "12px",
+                letterSpacing: "0.02em",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: scrolled ? "rgba(9,20,38,0.6)" : "rgba(255,255,255,0.85)",
+                marginLeft: "6px",
+                padding: "6px",
+              }}
+            >
+              {locale === "en" ? "नेपाली" : "EN"}
+            </button>
           </nav>
 
           {/* Mobile hamburger — icon animates into an X via transform/opacity only */}
@@ -311,9 +314,6 @@ export default function Nav() {
               href="/donate"
               onClick={() => setOpen(false)}
               tabIndex={open ? 0 : -1}
-              className="donate-spotlight-btn donate-spotlight-sm"
-              onMouseEnter={handleDonateEnter}
-              onMouseLeave={handleDonateLeave}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontWeight: 600,
@@ -321,16 +321,42 @@ export default function Nav() {
                 textDecoration: "none",
                 color: "#091426",
                 backgroundColor: "#D4AF37",
-                padding: "12px 24px",
+                padding: "12px 26px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
                 textAlign: "center",
-                borderRadius: "10px",
+                borderRadius: "var(--radius-pill)",
                 marginTop: "4px",
                 alignSelf: "flex-start",
-                transition: "box-shadow 0.2s ease",
+                boxShadow: "0 2px 8px rgba(212,175,55,0.18)",
               }}
             >
-              <span className="donate-btn-text">Donate</span>
+              {t.nav.donate}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
+
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "en" ? "ne" : "en")}
+              aria-label={locale === "en" ? "Switch to Nepali" : "Switch to English"}
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 600,
+                fontSize: "13px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgba(9,20,38,0.6)",
+                marginTop: "8px",
+                padding: 0,
+                alignSelf: "flex-start",
+              }}
+            >
+              {locale === "en" ? "नेपाली" : "EN"}
+            </button>
         </nav>
       </header>
     </>

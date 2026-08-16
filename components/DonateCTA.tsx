@@ -2,41 +2,9 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import Link from "next/link";
+import Button from "./Button";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-
-const handleDonateEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  const btn = e.currentTarget;
-  const rect = btn.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const maxDist = Math.max(
-    Math.hypot(x, y),
-    Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y),
-    Math.hypot(rect.width - x, rect.height - y),
-  );
-  const scaleNeeded = (maxDist * 2.2) / 8;
-  const existing = btn.querySelector(".donate-ripple");
-  if (existing) existing.remove();
-  const circle = document.createElement("span");
-  circle.className = "donate-ripple";
-  circle.style.left = `${x}px`;
-  circle.style.top = `${y}px`;
-  circle.style.setProperty("--ripple-scale", String(scaleNeeded));
-  btn.appendChild(circle);
-  requestAnimationFrame(() => circle.classList.add("donate-ripple-active"));
-  btn.style.transform = "translateY(-2px)";
-  btn.style.boxShadow = "0 6px 24px rgba(212,175,55,0.45)";
-};
-
-const handleDonateLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  const btn = e.currentTarget;
-  btn.querySelector(".donate-ripple")?.classList.remove("donate-ripple-active");
-  btn.style.transform = "translateY(0)";
-  btn.style.boxShadow = "none";
-};
 
 const AMOUNTS = [
   { label: "NPR 500",    sub: "School supplies, one month", param: "500"   },
@@ -66,7 +34,7 @@ export default function DonateCTA() {
       style={{
         position: "relative",
         background: "#091426",
-        padding: "clamp(90px,10vw,140px) 0",
+        padding: "clamp(130px,16vw,220px) 0",
         overflow: "hidden",
       }}
     >
@@ -109,7 +77,7 @@ export default function DonateCTA() {
             fontFamily: "var(--font-sans)",
             fontWeight: 400,
             fontSize: "16px",
-            lineHeight: 1.7,
+            lineHeight: 1.75,
             color: "rgba(255,255,255,0.62)",
             marginBottom: "56px",
           }}
@@ -222,30 +190,13 @@ export default function DonateCTA() {
         </motion.div>
 
         <motion.div {...enter(0.32)}>
-          <Link
+          <Button
             href={`/donate?amount=${AMOUNTS[selected].param}`}
-            className="donate-spotlight-btn donate-spotlight-lg"
-            onMouseEnter={handleDonateEnter}
-            onMouseLeave={handleDonateLeave}
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 700,
-              fontSize: "14px",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              textDecoration: "none",
-              color: "#091426",
-              backgroundColor: "#D4AF37",
-              paddingInline: "48px",
-              height: "56px",
-              display: "inline-flex",
-              alignItems: "center",
-              borderRadius: "10px",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            }}
+            size="lg"
+            style={{ textTransform: "uppercase", letterSpacing: "0.06em" }}
           >
-            <span className="donate-btn-text">Donate Now</span>
-          </Link>
+            Donate Now
+          </Button>
 
           <div
             style={{

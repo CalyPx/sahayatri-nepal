@@ -25,7 +25,7 @@ export default function Mission() {
     <section
       ref={ref}
       aria-labelledby="mission-heading"
-      style={{ background: "#FAFAF7", padding: "clamp(80px,9vw,128px) 0 clamp(80px,9vw,120px)" }}
+      style={{ background: "#FAFAF7", padding: "clamp(96px,10vw,170px) 0" }}
     >
       <div
         className="section-inner two-col"
@@ -46,7 +46,7 @@ export default function Mission() {
               fontSize: "11px",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "#D4AF37",
+              color: "var(--gold-dark)",
               marginBottom: "28px",
             }}
           >
@@ -148,7 +148,9 @@ export default function Mission() {
               width: "100%",
               aspectRatio: "4 / 3",
               overflow: "hidden",
-              borderRadius: "2px",
+              borderRadius: "10px",
+              transform: "rotate(-1.4deg)",
+              boxShadow: "var(--shadow-card-hover)",
             }}
           >
             <Image
@@ -167,8 +169,9 @@ export default function Mission() {
               fontSize: "11px",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "rgba(9,20,38,0.45)",
-              marginTop: "14px",
+              color: "rgba(9,20,38,0.65)",
+              marginTop: "22px",
+              transform: "rotate(-1.4deg)",
             }}
           >
             Playground installation — Jumla, May 2025

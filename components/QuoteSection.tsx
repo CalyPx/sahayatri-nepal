@@ -86,7 +86,7 @@ export default function QuoteSection() {
       style={{
         position: "relative",
         background: "#091426",
-        padding: "clamp(110px,14vw,170px) 24px",
+        padding: "clamp(130px,16vw,220px) 24px",
         textAlign: "center",
         overflow: "hidden",
       }}
@@ -106,10 +106,24 @@ export default function QuoteSection() {
           fontFamily: "var(--font-script)",
           fontWeight: 700,
           fontSize: "clamp(110px,18vw,200px)",
-          color: "rgba(255,255,255,0.03)",
+          color: "rgba(255,255,255,0.016)",
           pointerEvents: "none",
           userSelect: "none",
           whiteSpace: "nowrap",
+        }}
+      />
+
+      {/* Film grain — same technique as the hero, adds depth to the flat navy */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundRepeat: "repeat",
+          opacity: 0.025,
+          pointerEvents: "none",
         }}
       />
 
@@ -126,6 +140,7 @@ export default function QuoteSection() {
           letterSpacing: "-0.015em",
           border: "none",
           padding: 0,
+          textWrap: "balance",
         }}
       >
         {/* Real text for screen readers; the animated spans are decorative */}
@@ -141,7 +156,7 @@ export default function QuoteSection() {
             &ldquo;
           </span>
           <CharLine text={LINE_ONE} startIndex={1} show={show} reduced={reduced} />
-          <br />
+          {" "}
           <CharLine
             text={LINE_TWO}
             startIndex={LINE_ONE.length + 1}
@@ -167,10 +182,10 @@ export default function QuoteSection() {
         {...enterLate(ATTRIBUTION_DELAY)}
         style={{
           position: "relative",
-          fontFamily: "var(--font-serif)",
-          fontStyle: "italic",
-          fontWeight: 400,
-          fontSize: "24px",
+          fontFamily: "var(--font-display)",
+          fontWeight: 700,
+          fontSize: "26px",
+          letterSpacing: "-0.01em",
           color: "#D4AF37",
           marginTop: "28px",
         }}
@@ -182,15 +197,35 @@ export default function QuoteSection() {
         {...enterLate(ATTRIBUTION_DELAY + 0.35)}
         style={{
           position: "relative",
-          fontFamily: "var(--font-script)",
-          fontWeight: 700,
-          fontSize: "clamp(32px, 4.5vw, 54px)",
-          color: "rgba(212,175,55,0.85)",
           marginTop: "44px",
-          lineHeight: 1.25,
+          lineHeight: 1.2,
         }}
       >
-        सहयात्री — Fellow Travellers
+        <span
+          style={{
+            display: "block",
+            fontFamily: "var(--font-script)",
+            fontWeight: 700,
+            fontSize: "clamp(32px, 4.5vw, 54px)",
+            color: "rgba(212,175,55,0.85)",
+          }}
+        >
+          सहयात्री
+        </span>
+        <span
+          style={{
+            display: "block",
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "15px",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.5)",
+            marginTop: "12px",
+          }}
+        >
+          Fellow Travellers
+        </span>
       </motion.p>
     </section>
   );

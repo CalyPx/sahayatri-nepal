@@ -26,6 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel
@@ -40,3 +41,4 @@ next-env.d.ts
 remaining_prompt*.md
 
 .scripts
+/lib/generated/prisma

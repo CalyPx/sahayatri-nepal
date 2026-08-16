@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 
 /**
- * The gold thread — a 2px line on the left edge of the viewport that
- * fills top-to-bottom as the reader travels the page. सहयात्री means
- * "fellow traveller"; this line walks the journey with you.
+ * Thin scroll-progress bar fixed to the TOP of the viewport, filling
+ * left-to-right as the reader travels the page. सहयात्री means "fellow
+ * traveller"; this line walks the journey with you.
  *
  * Driven by a passive scroll listener + rAF, animating transform only.
  */
@@ -21,7 +21,7 @@ export default function ScrollProgress() {
         document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       if (barRef.current) {
-        barRef.current.style.transform = `scaleY(${p})`;
+        barRef.current.style.transform = `scaleX(${p})`;
       }
     };
 
@@ -46,9 +46,9 @@ export default function ScrollProgress() {
         position: "fixed",
         top: 0,
         left: 0,
-        bottom: 0,
-        width: "2px",
-        zIndex: 80,
+        right: 0,
+        height: "3px",
+        zIndex: 90,
         pointerEvents: "none",
         background: "rgba(212,175,55,0.14)",
       }}
@@ -59,8 +59,8 @@ export default function ScrollProgress() {
           position: "absolute",
           inset: 0,
           background: "#D4AF37",
-          transform: "scaleY(0)",
-          transformOrigin: "top",
+          transform: "scaleX(0)",
+          transformOrigin: "left",
           willChange: "transform",
         }}
       />

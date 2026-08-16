@@ -15,6 +15,11 @@ const KARNALI_ID = "6";
 const DRAW_DURATION = 1.0;   // per-province stroke draw
 const DRAW_STAGGER = 0.12;   // sequential offset between provinces
 const PIN_DELAY = DRAW_STAGGER * (PROVINCES.length - 1) + 0.7;
+const PATH_DELAY = PIN_DELAY + 0.5;
+
+/* Approximate Kathmandu, placed at the Bagmati province centroid —
+   illustrative reference point only, not a surveyed coordinate. */
+const KATHMANDU_PIN: [number, number] = [319.25, 173.1];
 
 // Tooltip arrow pointing downward
 function TooltipArrow() {
@@ -44,6 +49,7 @@ export default function NepalMap() {
 
   const show = prefersReduced || inView;
   const [jx, jy] = JUMLA_PIN;
+  const [kx, ky] = KATHMANDU_PIN;
 
   // The inner <g> is shifted by translate(-20, 0), so subtract 20 from x
   // to get the rendered position as a % of the viewBox dimensions.
@@ -112,6 +118,40 @@ export default function NepalMap() {
               />
             );
           })}
+
+          {/* ── Route line — Kathmandu to Jumla, draws in after the pin arrives ── */}
+          <motion.path
+            d={`M${kx},${ky} Q${(kx + jx) / 2},${Math.min(ky, jy) - 30} ${jx},${jy}`}
+            fill="none"
+            stroke="#8C6D1F"
+            strokeWidth={1.5}
+            strokeDasharray="5 5"
+            strokeLinecap="round"
+            initial={prefersReduced ? false : { pathLength: 0, opacity: 0 }}
+            animate={show ? { pathLength: 1, opacity: 0.7 } : {}}
+            transition={{ duration: 1.1, delay: prefersReduced ? 0 : PATH_DELAY, ease: EASE }}
+          />
+
+          {/* ── Kathmandu reference marker ─────────────────────────────────── */}
+          <motion.g
+            initial={prefersReduced ? false : { opacity: 0 }}
+            animate={show ? { opacity: 1 } : {}}
+            transition={{ duration: 0.4, delay: prefersReduced ? 0 : PATH_DELAY }}
+          >
+            <circle cx={kx} cy={ky} r={4} fill="#1A6FA8" />
+            <text
+              x={kx + 9}
+              y={ky + 3}
+              fontFamily="var(--font-sans), system-ui, sans-serif"
+              fontWeight={500}
+              fontSize={10}
+              fill="rgba(9,20,38,0.68)"
+              letterSpacing="0.02em"
+              style={{ pointerEvents: "none" }}
+            >
+              Kathmandu
+            </text>
+          </motion.g>
 
           {/* ── Pin, pulse rings and label — after the map has drawn ─────── */}
           <motion.g

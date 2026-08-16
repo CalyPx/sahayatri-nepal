@@ -4,11 +4,18 @@
 
 /* ── Design tokens ─────────────────────────────────────── */
 :root {
-  --navy:  #091426;
-  --blue:  #1A6FA8;
-  --gold:  #D4AF37;
-  --ice:   #F0F7FF;
-  --white: #FAFAF7;
+  --navy:   #091426;
+  --blue:   #1A6FA8;
+  --gold:   #D4AF37;
+  /* Darker gold for use on light/cream backgrounds only — #D4AF37 sits at
+     ~2.3:1 against #FAFAF7/#F7F5F2 and fails WCAG AA. This variant clears
+     4.5:1. Bright --gold stays reserved for dark/navy sections. */
+  --gold-dark: #8C6D1F;
+  --ice:    #F0F7FF;
+  --white:  #FAFAF7;
+  /* Warm neutral alternative to pure white — alternated with cream/navy
+     sections so the page isn't one flat white slab end to end. */
+  --cream:  #F7F5F2;
 
   /* 8px spacing scale */
   --s-8:  8px;
@@ -22,9 +29,22 @@
   --s-96: 96px;
   --s-120: 120px;
   --s-160: 160px;
+  --s-200: 200px;
 
   --max-w: 1200px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Radius scale */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-pill: 999px;
+
+  /* Shadow scale */
+  --shadow-soft:      0 4px 24px rgba(26,111,168,0.12), 0 1px 4px rgba(26,111,168,0.08);
+  --shadow-card:      0 2px 16px rgba(9,20,38,0.05);
+  --shadow-card-hover: 0 20px 60px rgba(9,20,38,0.10), 0 2px 8px rgba(9,20,38,0.06);
+  --shadow-dark:      0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
 }
 
 @layer base {
@@ -75,8 +95,8 @@
 
 /* ── Ken Burns ──────────────────────────────────────────── */
 @keyframes kenburns {
-  from { transform: scale(1.0); }
-  to   { transform: scale(1.04); }
+  from { transform: scale(1.08); }
+  to   { transform: scale(1.0); }
 }
 
 /* ── Programme cards: premium hover ─────────────────────── */
@@ -94,6 +114,9 @@
   box-shadow: 0 20px 60px rgba(9,20,38,0.10), 0 2px 8px rgba(9,20,38,0.06);
 }
 .program-photo img {
+  /* Uniform color grade so mixed-quality source photos read as one
+     visual family: slight warmth, lifted contrast, a touch more saturation. */
+  filter: sepia(0.1) saturate(1.12) contrast(1.06) brightness(1.02);
   transition: transform 0.6s var(--ease);
   will-change: transform;
 }
@@ -113,13 +136,23 @@
   transform: translateX(0);
 }
 
-/* ── Reports list: row slide (transform, not padding) ───── */
-.report-row-inner {
-  transition: transform 0.25s var(--ease);
+/* ── Report / document cards ─────────────────────────────── */
+.doc-card {
+  transition: transform 0.3s var(--ease), box-shadow 0.3s ease, border-color 0.3s ease;
 }
-.report-row:hover .report-row-inner,
-.report-row:focus-visible .report-row-inner {
-  transform: translateX(8px);
+.doc-card:hover,
+.doc-card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(212,175,55,0.35);
+}
+.doc-card-arrow {
+  display: inline-block;
+  transition: transform 0.2s var(--ease);
+}
+.doc-card:hover .doc-card-arrow,
+.doc-card:focus-within .doc-card-arrow {
+  transform: translateX(4px);
 }
 
 /* ── Quote watermark (decorative pseudo-element text) ───── */
@@ -165,10 +198,6 @@
   .section-inner { padding: 0 var(--s-24); }
   .impact-row { flex-direction: column !important; gap: var(--s-48) !important; }
   .impact-divider { display: none !important; }
-  /* Map section — stack text first, map below */
-  .map-grid { grid-template-columns: 1fr !important; }
-  .map-visual { order: 2; max-width: 400px; width: 100%; margin: 0 auto; }
-  .map-text { order: 1; }
   /* Story image — zero out the negative offset so it doesn't pull into section above */
   .story-image { margin-top: 0 !important; }
 }

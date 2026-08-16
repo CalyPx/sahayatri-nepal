@@ -4,8 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-// Replace with a real Formspree endpoint when available
-const FORM_ACTION = "https://formspree.io/f/mwkgvpyv";
+const FORM_ACTION = "/api/newsletter";
 
 export default function NewsletterStrip() {
   const ref = useRef<HTMLElement>(null);

@@ -1,0 +1,120 @@
+// Prisma schema for Sahayatri Nepal
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AdminUser {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  name            String
+  failedAttempts  Int       @default(0)
+  lockedUntil     DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  photoUrl  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Story {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  studentName String
+  quote       String
+  body        String
+  photoUrl    String?
+  published   Boolean  @default(true)
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FaqItem {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ImpactStat {
+  id        String   @id @default(cuid())
+  label     String
+  sublabel  String
+  value     Int
+  suffix    String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FinancialAllocation {
+  id         String   @id @default(cuid())
+  label      String
+  percent    Int
+  color      String
+  fiscalYear String
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  date      DateTime @default(now())
+  category  String
+  excerpt   String
+  body      String
+  fileUrl   String?
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Donation {
+  id          String   @id @default(cuid())
+  amount      Int
+  currency    String   @default("NPR")
+  donorName   String
+  donorEmail  String
+  gatewayRef  String   @unique
+  status      String   @default("pending") // pending | success | failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

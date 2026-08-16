@@ -12,6 +12,7 @@ const PROGRAMS = [
     num: "01",
     title: "Education",
     photo: "/photos/education-classroom.jpg",
+    photoAlt: "Staff and students in a training session at a Karnali school, with a presentation displayed on screen",
     description:
       "Sign language curriculum and qualified teachers for deaf students across Karnali Province. Structured learning that meets national standards.",
     href: "/projects#education",
@@ -20,6 +21,7 @@ const PROGRAMS = [
     num: "02",
     title: "Safe Housing",
     photo: "/photos/safe-housing-dormitory.jpg",
+    photoAlt: "Staff and students posing together during a celebration at the Sahayatri Nepal center",
     description:
       "Residential accommodation in Jumla for students who travel days from remote villages. A safe home so learning can happen.",
     href: "/projects#housing",
@@ -28,6 +30,7 @@ const PROGRAMS = [
     num: "03",
     title: "Life Skills",
     photo: "/photos/life-skills-activity.jpg",
+    photoAlt: "Children playing on swings and a slide in the school playground in Jumla",
     description:
       "Art, sport, child safeguarding, and extracurricular programmes. We believe childhood matters as much as academics.",
     href: "/projects#life-skills",
@@ -65,7 +68,7 @@ export default function Programs() {
               fontSize: "11px",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "#D4AF37",
+              color: "var(--gold-dark)",
               marginBottom: "20px",
             }}
           >
@@ -123,7 +126,7 @@ export default function Programs() {
               >
                 <Image
                   src={program.photo}
-                  alt={`${program.title} programme`}
+                  alt={program.photoAlt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
@@ -194,12 +197,12 @@ export default function Programs() {
                     fontSize: "13px",
                     letterSpacing: "0.04em",
                     textDecoration: "none",
-                    color: "#D4AF37",
+                    color: "var(--gold-dark)",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "8px",
                     alignSelf: "flex-start",
-                    borderBottom: "1px solid #D4AF37",
+                    borderBottom: "1px solid var(--gold-dark)",
                     paddingBottom: "2px",
                   }}
                 >

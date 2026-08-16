@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,13 +26,37 @@ const COL_LINKS = {
 };
 
 export default function Footer() {
+  const [footerEmail, setFooterEmail] = useState("");
+  const [footerStatus, setFooterStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  async function handleFooterSubscribe(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!footerEmail) return;
+    setFooterStatus("sending");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: footerEmail }),
+      });
+      if (res.ok) {
+        setFooterStatus("done");
+        setFooterEmail("");
+      } else {
+        setFooterStatus("error");
+      }
+    } catch {
+      setFooterStatus("error");
+    }
+  }
+
   return (
     <footer
       role="contentinfo"
       style={{
         position: "relative",
         background: "#091426",
-        padding: "100px 0 52px",
+        padding: "140px 0 64px",
         borderTop: "1px solid rgba(255,255,255,0.05)",
       }}
     >
@@ -42,8 +67,8 @@ export default function Footer() {
           style={{
             display: "grid",
             gridTemplateColumns: "1.5fr 1fr 1fr 1fr",
-            gap: "64px",
-            paddingBottom: "72px",
+            gap: "80px",
+            paddingBottom: "88px",
             borderBottom: "1px solid rgba(255,255,255,0.06)",
           }}
         >
@@ -63,8 +88,8 @@ export default function Footer() {
                 src="/sahayatri_nepal_logo.png"
                 alt=""
                 aria-hidden="true"
-                width={34}
-                height={34}
+                width={28}
+                height={28}
                 style={{ objectFit: "contain" }}
               />
               <span
@@ -185,6 +210,101 @@ export default function Footer() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Partners + newsletter — structural scaffold, real content/copy TBD */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "32px",
+            padding: "44px 0",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          {/* Partner org logos */}
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 500,
+                fontSize: "12px",
+                color: "rgba(255,255,255,0.4)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              In partnership with
+            </span>
+            {/* Placeholder chip — swap for the real Learn for Life logo mark */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                height: "36px",
+                paddingInline: "16px",
+                border: "1px solid rgba(255,255,255,0.14)",
+                borderRadius: "var(--radius-sm)",
+                fontFamily: "var(--font-display)",
+                fontWeight: 600,
+                fontSize: "13px",
+                color: "rgba(255,255,255,0.72)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Learn for Life, UK
+            </div>
+          </div>
+
+          {/* Newsletter signup */}
+          {footerStatus === "done" ? (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", color: "#D4AF37" }}>
+              ✓ Subscribed. Thank you.
+            </p>
+          ) : (
+            <form onSubmit={handleFooterSubscribe} style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <label htmlFor="footer-newsletter-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="footer-newsletter-email"
+                type="email"
+                required
+                placeholder="Your email address"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                  borderRadius: "var(--radius-sm)",
+                  padding: "11px 16px",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "13px",
+                  color: "#FAFAF7",
+                  minWidth: "200px",
+                }}
+              />
+              <button
+                type="submit"
+                disabled={footerStatus === "sending"}
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 600,
+                  fontSize: "13px",
+                  color: "#091426",
+                  background: "#D4AF37",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  padding: "11px 20px",
+                  cursor: footerStatus === "sending" ? "wait" : "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {footerStatus === "sending" ? "Subscribing…" : "Subscribe"}
+              </button>
+            </form>
+          )}
         </div>
 
         {/* Bottom bar */}

@@ -6,12 +6,6 @@ import NepalMap from "./NepalMap";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const STATS = [
-  { value: "47",   label: "Students"   },
-  { value: "100%", label: "SEE Pass"   },
-  { value: "12",   label: "Years"      },
-];
-
 export default function ImpactMap() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
@@ -32,124 +26,76 @@ export default function ImpactMap() {
       aria-labelledby="map-heading"
       style={{
         background: "#F0F7FF",
-        padding: "clamp(64px, 8vw, 120px) clamp(24px, 8vw, 120px)",
+        padding: "clamp(72px, 8vw, 120px) 0",
       }}
     >
-      <div
-        className="map-grid"
+      {/* ── Text content — centered header, full-width map below ────────── */}
+      <div className="section-inner" style={{ marginBottom: "clamp(40px, 6vw, 64px)" }}>
+        <motion.p
+          {...enter(0)}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontWeight: 600,
+            fontSize: "11px",
+            letterSpacing: "0.16em",
+            textTransform: "uppercase",
+            color: "var(--gold-dark)",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          Where We Work
+        </motion.p>
+
+        <motion.h2
+          id="map-heading"
+          {...enter(0.08)}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "clamp(36px,4vw,48px)",
+            lineHeight: 1.1,
+            letterSpacing: "-0.03em",
+            color: "#091426",
+            marginBottom: "20px",
+            maxWidth: "20ch",
+            marginInline: "auto",
+            textAlign: "center",
+          }}
+        >
+          We work where access to education is hardest.
+        </motion.h2>
+
+        <motion.p
+          {...enter(0.16)}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontWeight: 400,
+            fontSize: "16px",
+            lineHeight: 1.75,
+            color: "rgba(9,20,38,0.62)",
+            maxWidth: "52ch",
+            marginInline: "auto",
+            textAlign: "center",
+          }}
+        >
+          Sahayatri Nepal supports deaf children in Karnali Province — one
+          of Nepal&rsquo;s most remote regions, a five-day journey from the
+          capital — providing education, housing and life skills.
+        </motion.p>
+      </div>
+
+      {/* ── Full-width map ────────────────────────────────────────────────── */}
+      <motion.div
+        {...enter(0.24)}
         style={{
-          maxWidth: "1200px",
+          maxWidth: "1080px",
           margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "50fr 50fr",
-          gap: "clamp(40px, 6vw, 80px)",
-          alignItems: "center",
+          padding: "0 clamp(24px, 6vw, 80px)",
         }}
       >
-        {/* ── LEFT: Real Nepal map from GeoJSON survey data ─────────────── */}
-        <motion.div
-          {...enter(0)}
-          className="map-visual"
-          style={{ maxWidth: "600px", width: "100%" }}
-        >
-          <NepalMap />
-        </motion.div>
-
-        {/* ── RIGHT: Text content ─────────────────────────────────────────── */}
-        <div className="map-text">
-          {/* Eyebrow */}
-          <motion.p
-            {...enter(0.08)}
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 600,
-              fontSize: "11px",
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "#D4AF37",
-              marginBottom: "20px",
-            }}
-          >
-            Where We Work
-          </motion.p>
-
-          {/* Headline */}
-          <motion.h2
-            id="map-heading"
-            {...enter(0.14)}
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: "clamp(36px,4vw,48px)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-              color: "#091426",
-              marginBottom: "24px",
-              maxWidth: "20ch",
-            }}
-          >
-            We work where access to education is hardest.
-          </motion.h2>
-
-          {/* Body */}
-          <motion.p
-            {...enter(0.20)}
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 400,
-              fontSize: "16px",
-              lineHeight: 1.75,
-              color: "rgba(9,20,38,0.62)",
-              marginBottom: "48px",
-              maxWidth: "44ch",
-            }}
-          >
-            Sahayatri Nepal supports deaf children in Karnali Province — one
-            of Nepal&rsquo;s most remote regions — providing education, housing
-            and life skills.
-          </motion.p>
-
-          {/* Stats row */}
-          <motion.div
-            {...enter(0.26)}
-            style={{
-              display: "flex",
-              gap: "clamp(24px, 4vw, 40px)",
-              flexWrap: "wrap",
-            }}
-          >
-            {STATS.map((s) => (
-              <div key={s.label}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                    fontSize: "clamp(28px, 3.2vw, 32px)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.04em",
-                    color: "#091426",
-                    marginBottom: "6px",
-                  }}
-                >
-                  {s.value}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontWeight: 500,
-                    fontSize: "10px",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: "rgba(9,20,38,0.45)",
-                  }}
-                >
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </div>
+        <NepalMap />
+      </motion.div>
     </section>
   );
 }

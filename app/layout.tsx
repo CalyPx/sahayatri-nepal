@@ -9,6 +9,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import ScrollProgress from "@/components/ScrollProgress";
+import { LanguageProvider } from "@/components/LanguageContext";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -69,8 +70,10 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${jakarta.variable} ${dancing.variable} ${kalam.variable} ${spaceMono.variable} ${playfair.variable} antialiased`}
         style={{ backgroundColor: "#FAFAF7", color: "#091426" }}
       >
-        <ScrollProgress />
-        {children}
+        <LanguageProvider>
+          <ScrollProgress />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
