@@ -15,8 +15,6 @@ import FAQ from "@/components/FAQ";
 import DonateCTA from "@/components/DonateCTA";
 import Footer from "@/components/Footer";
 
-export const dynamic = "force-dynamic";
-
 export default function Home() {
   return (
     <>

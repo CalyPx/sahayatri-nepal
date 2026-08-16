@@ -9,8 +9,6 @@ export const metadata: Metadata = {
   description: "The story behind Sahayatri Nepal and our work with deaf children in Karnali Province.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default function AboutPage() {
   return (
     <>

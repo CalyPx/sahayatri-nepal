@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   description: "Photos from Sahayatri Nepal's programmes in Jumla, Karnali Province.",
 };
 
-export const dynamic = "force-dynamic";
-
 // Shown until real photos are added via /admin/gallery.
 const FALLBACK_PHOTOS = [
   { photoUrl: "/hero_section_photo.webp", caption: "A teacher and student communicating in sign language outside a school in Jumla" },

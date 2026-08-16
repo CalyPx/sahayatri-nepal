@@ -5,8 +5,6 @@ import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

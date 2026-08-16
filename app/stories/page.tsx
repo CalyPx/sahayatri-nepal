@@ -11,8 +11,6 @@ export const metadata: Metadata = {
   description: "Stories from students at Sahayatri Nepal.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function StoriesPage() {
   const stories = await prisma.story.findMany({
     where: { published: true },

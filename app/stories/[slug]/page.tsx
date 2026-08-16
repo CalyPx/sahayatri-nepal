@@ -6,8 +6,6 @@ import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const story = await prisma.story.findUnique({ where: { slug } });

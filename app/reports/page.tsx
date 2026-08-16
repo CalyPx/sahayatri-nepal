@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   description: "Financial statements, programme updates, and activity reports from Sahayatri Nepal.",
 };
 
-export const dynamic = "force-dynamic";
-
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 
 export default async function ReportsPage() {
