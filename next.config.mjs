@@ -1,14 +1,4 @@
 /** @type {import('next').NextConfig} */
-const remotePatterns = [];
-
-if (process.env.R2_PUBLIC_URL) {
-  const url = new URL(process.env.R2_PUBLIC_URL);
-  remotePatterns.push({
-    protocol: url.protocol.replace(":", ""),
-    hostname: url.hostname,
-  });
-}
-
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -16,7 +6,10 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  images: { remotePatterns },
+  experimental: {
+    // Default is 1MB — too small for photo/PDF uploads through Server Actions.
+    serverActions: { bodySizeLimit: "10mb" },
+  },
   async headers() {
     return [
       {

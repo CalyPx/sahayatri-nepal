@@ -11,7 +11,7 @@ const PROGRAMS = [
   {
     num: "01",
     title: "Education",
-    photo: "/photos/education-classroom.jpg",
+    photo: "/photos/education-classroom.webp",
     photoAlt: "Staff and students in a training session at a Karnali school, with a presentation displayed on screen",
     description:
       "Sign language curriculum and qualified teachers for deaf students across Karnali Province. Structured learning that meets national standards.",
@@ -20,7 +20,7 @@ const PROGRAMS = [
   {
     num: "02",
     title: "Safe Housing",
-    photo: "/photos/safe-housing-dormitory.jpg",
+    photo: "/photos/safe-housing-dormitory.webp",
     photoAlt: "Staff and students posing together during a celebration at the Sahayatri Nepal center",
     description:
       "Residential accommodation in Jumla for students who travel days from remote villages. A safe home so learning can happen.",
@@ -29,7 +29,7 @@ const PROGRAMS = [
   {
     num: "03",
     title: "Life Skills",
-    photo: "/photos/life-skills-activity.jpg",
+    photo: "/photos/life-skills-activity.webp",
     photoAlt: "Children playing on swings and a slide in the school playground in Jumla",
     description:
       "Art, sport, child safeguarding, and extracurricular programmes. We believe childhood matters as much as academics.",

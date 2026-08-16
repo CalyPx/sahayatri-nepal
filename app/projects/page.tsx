@@ -14,7 +14,7 @@ const PROJECTS = [
     id: "education",
     num: "01",
     title: "Education",
-    photo: "/photos/education-classroom.jpg",
+    photo: "/photos/education-classroom.webp",
     description:
       "Sign language curriculum and qualified teachers for deaf students across Karnali Province. Structured learning that meets national standards, leading to a 100% SEE pass rate for the Class of 2025.",
   },
@@ -22,7 +22,7 @@ const PROJECTS = [
     id: "housing",
     num: "02",
     title: "Safe Housing",
-    photo: "/photos/safe-housing-dormitory.jpg",
+    photo: "/photos/safe-housing-dormitory.webp",
     description:
       "Residential accommodation in Jumla for students who travel days from remote villages across Karnali Province. A safe, supervised home so learning can happen year-round.",
   },
@@ -30,7 +30,7 @@ const PROJECTS = [
     id: "life-skills",
     num: "03",
     title: "Life Skills",
-    photo: "/photos/life-skills-activity.jpg",
+    photo: "/photos/life-skills-activity.webp",
     description:
       "Art, sport, child safeguarding, and extracurricular programmes. We believe childhood matters as much as academics — students take part in play and creative activity alongside their studies.",
   },
@@ -49,10 +49,10 @@ export default function ProjectsPage() {
             style={{ background: i % 2 === 0 ? "#FAFAF7" : "#F0F7FF", padding: "clamp(56px,7vw,96px) 0" }}
           >
             <div
-              className="section-inner"
+              className="section-inner two-col"
               style={{
                 display: "grid",
-                gridTemplateColumns: i % 2 === 0 ? "1fr 1fr" : "1fr 1fr",
+                gridTemplateColumns: "1fr 1fr",
                 gap: "clamp(40px,6vw,80px)",
                 alignItems: "center",
               }}

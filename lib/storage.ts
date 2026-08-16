@@ -1,49 +1,30 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { prisma } from "@/lib/prisma";
 
-function getClient() {
-  const accountId = process.env.R2_ACCOUNT_ID;
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
-  if (!accountId || !accessKeyId || !secretAccessKey) return null;
+const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB — generous for a photo or a report PDF
 
-  return new S3Client({
-    region: "auto",
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-    credentials: { accessKeyId, secretAccessKey },
-  });
-}
-
+/** Files live in the database as MediaAsset rows, served back via /api/media/[id]. */
 export function isStorageConfigured() {
-  return getClient() !== null && !!process.env.R2_PUBLIC_URL;
+  return true;
 }
 
 export async function uploadFile(
   buffer: Buffer,
-  key: string,
+  _key: string,
   contentType: string,
 ): Promise<string> {
-  const client = getClient();
-  const bucket = process.env.R2_BUCKET_NAME;
-  const publicUrl = process.env.R2_PUBLIC_URL;
-  if (!client || !bucket || !publicUrl) {
+  if (buffer.byteLength > MAX_FILE_BYTES) {
     throw new Error(
-      "File storage isn't configured yet — set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME and R2_PUBLIC_URL.",
+      `File is too large (${(buffer.byteLength / 1024 / 1024).toFixed(1)}MB) — please use something under 8MB.`,
     );
   }
-  await client.send(
-    new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: buffer,
-      ContentType: contentType,
-    }),
-  );
-  return `${publicUrl.replace(/\/$/, "")}/${key}`;
+  const asset = await prisma.mediaAsset.create({
+    data: { data: new Uint8Array(buffer), mimeType: contentType || "application/octet-stream" },
+  });
+  return `/api/media/${asset.id}`;
 }
 
-export async function deleteFile(key: string): Promise<void> {
-  const client = getClient();
-  const bucket = process.env.R2_BUCKET_NAME;
-  if (!client || !bucket) return;
-  await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
+export async function deleteFile(urlOrKey: string): Promise<void> {
+  const id = urlOrKey.split("/").pop();
+  if (!id) return;
+  await prisma.mediaAsset.delete({ where: { id } }).catch(() => {});
 }

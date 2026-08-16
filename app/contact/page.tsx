@@ -20,7 +20,7 @@ export default function ContactPage() {
           description="Questions about donating, sponsoring a student, or visiting the school in Jumla — we'd love to hear from you."
         />
         <section style={{ background: "#FAFAF7", padding: "clamp(56px,7vw,96px) 0" }}>
-          <div className="section-inner" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(40px,6vw,80px)" }}>
+          <div className="section-inner two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(40px,6vw,80px)" }}>
             <ContactForm />
             <div>
               <p style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "14px", color: "#091426", marginBottom: "10px" }}>

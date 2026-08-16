@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { uploadFile, isStorageConfigured } from "@/lib/storage";
+import { uploadFile } from "@/lib/storage";
 
 function slugify(input: string) {
   return input
@@ -15,7 +15,6 @@ function slugify(input: string) {
 async function handlePhotoUpload(formData: FormData): Promise<string | undefined> {
   const file = formData.get("photo");
   if (!(file instanceof File) || file.size === 0) return undefined;
-  if (!isStorageConfigured()) return undefined;
   const buffer = Buffer.from(await file.arrayBuffer());
   const key = `stories/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
   return uploadFile(buffer, key, file.type || "application/octet-stream");

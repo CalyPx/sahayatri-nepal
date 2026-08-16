@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/team", label: "Team" },
   { href: "/admin/stories", label: "Stories" },
+  { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/faq", label: "FAQ" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/impact", label: "Impact Numbers" },
@@ -23,8 +24,9 @@ const NAV = [
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", background: "#F7F5F2" }}>
+    <div className="admin-shell" style={{ minHeight: "100vh", display: "flex", background: "#F7F5F2" }}>
       <aside
+        className="admin-sidebar"
         style={{
           width: "220px",
           flexShrink: 0,
@@ -85,7 +87,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           </button>
         </form>
       </aside>
-      <main style={{ flex: 1, padding: "40px clamp(24px,4vw,56px)", maxWidth: "980px" }}>
+      <main className="admin-main" style={{ flex: 1, padding: "40px clamp(24px,4vw,56px)", maxWidth: "980px" }}>
         {children}
       </main>
     </div>

@@ -260,3 +260,10 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ── Admin panel shell ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .admin-shell { flex-direction: column !important; }
+  .admin-sidebar { width: 100% !important; }
+  .admin-main { padding: 24px 20px !important; }
+}

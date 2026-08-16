@@ -2,9 +2,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminHomePage() {
-  const [team, stories, faq, reports, messages, unhandled, donations] = await Promise.all([
+  const [team, stories, gallery, faq, reports, messages, unhandled, donations] = await Promise.all([
     prisma.teamMember.count(),
     prisma.story.count(),
+    prisma.galleryPhoto.count(),
     prisma.faqItem.count(),
     prisma.report.count(),
     prisma.contactSubmission.count(),
@@ -15,6 +16,7 @@ export default async function AdminHomePage() {
   const cards = [
     { label: "Team members", value: team, href: "/admin/team" },
     { label: "Stories", value: stories, href: "/admin/stories" },
+    { label: "Gallery photos", value: gallery, href: "/admin/gallery" },
     { label: "FAQ items", value: faq, href: "/admin/faq" },
     { label: "Reports", value: reports, href: "/admin/reports" },
     { label: "Unread messages", value: unhandled, href: "/admin/messages" },

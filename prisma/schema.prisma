@@ -10,6 +10,13 @@ datasource db {
   provider = "postgresql"
 }
 
+model MediaAsset {
+  id        String   @id @default(cuid())
+  data      Bytes
+  mimeType  String
+  createdAt DateTime @default(now())
+}
+
 model AdminUser {
   id              String    @id @default(cuid())
   email           String    @unique
@@ -86,6 +93,16 @@ model Report {
   excerpt   String
   body      String
   fileUrl   String?
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryPhoto {
+  id        String   @id @default(cuid())
+  photoUrl  String
+  caption   String   @default("")
+  order     Int      @default(0)
   published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

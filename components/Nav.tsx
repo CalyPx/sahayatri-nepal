@@ -65,7 +65,7 @@ export default function Nav() {
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:bg-white focus:text-[#091426] focus:px-4 focus:py-2 focus:text-sm focus:rounded"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-3 focus-visible:left-3 focus-visible:z-[200] focus-visible:bg-white focus-visible:text-[#091426] focus-visible:px-4 focus-visible:py-2 focus-visible:text-sm focus-visible:rounded"
       >
         Skip to main content
       </a>
